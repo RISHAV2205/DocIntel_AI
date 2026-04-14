@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from sqlalchemy.orm import Session
 import os
 import shutil
-
 from app import models
 from app.database import get_db
 from app.oauth2 import get_current_user
@@ -10,7 +9,7 @@ from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
 
 # for embedding
-from app.embedding import model
+from app.services.embedding import model,generate_embedding
 
 
 router = APIRouter(
@@ -86,12 +85,12 @@ def upload_document(
     
     # storing chunks in db
     for i, text in enumerate(chunks):
-        vector = model.encode(text)
+        vector = generate_embedding(text)
         chunk = models.DocumentChunk(
             document_id=new_document.id,
             chunk_index=i,
             chunk_text=text,
-            embedding=vector.tolist()
+            embedding=vector
             )
         db.add(chunk)
     db.commit()
@@ -104,4 +103,36 @@ def upload_document(
         "filename": new_document.filename,
         "status": new_document.status
     }
+    
+    
+# deleting document
+@router.delete("/delete-docs/{document_id}")
+def delete_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.owner_id == current_user.id
+    ).first()
 
+    if not document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document not found"
+        )
+
+    # delete uploaded file
+    if os.path.exists(document.file_path):
+        os.remove(document.file_path)
+
+    # delete extracted text
+    if document.extracted_text_path and os.path.exists(document.extracted_text_path):
+        os.remove(document.extracted_text_path)
+
+    # delete document (chunks will delete automatically if cascade is set)
+    db.delete(document)
+    db.commit()
+
+    return {"message": "Document deleted successfully"}
