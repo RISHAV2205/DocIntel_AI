@@ -1,0 +1,811 @@
+1 
+ 
+ 
+AI Powered Document Analyzer Hub  
+Individual Project report  
+For the department of  
+Computer Science and Engineering (Artificial Intelligence and Machine Learning)/ 
+Computer Science and Engineering (Artificial Intelligence) 
+ 
+ 
+Submitted By 
+ 
+Rishav Poddar  
+ 
+ 
+ 
+Enrollment No. 12024002028128 
+ 
+ 
+ 
+ 
+ 
+ 
+Under the guidance of 
+Prof. Debdatta Chatterjee 
+ 
+Department of Computer Science and Engineering (Artificial Intelligence and Machine Learning)/ 
+Department of Computer Science and Engineering (Artificial Intelligence) 
+ 
+ 
+ 
+ 
+ 
+UNIVERSITY OF ENGINEERING AND MANAGEMENT, KOLKATA 
+University Area, Plot No. III – B/5, New Town, Action Area – III, Kolkata – 700160 
+ 
+2 
+ 
+CERTIFICATE 
+ 
+This is to certify that the project titled Emotion recognition in conversations using Natural Language 
+Processing  submitted by Rishav Poddar(University Registration No. 304202400900823  of 2024 - 
+2025), student of the University of Engineering and Management, Kolkata, in partial fulfillment of 
+requirement for the degree of Bachelor of Technology in Computer Science and Engineering (Artificial 
+Intelligence and Machine Learning)/ Computer Science and Engineering (Artificial Intelligence), is a 
+bonafide work carried out by them under the supervision and guidance of Prof. Debdatta Chatterjee during 
+4th   Semester of academic session of 2025 - 2026. The content of this report has not been submitted to any 
+other university or institute. I am glad to inform that the work is entirely original and its performance is 
+found to be quite satisfactory. 
+ 
+ 
+                                                                                                                          
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+             
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Signature of Supervisor 
+Department of CSE (AI & ML)/ Department 
+of CSE (AI) 
+ 
+3 
+ 
+ACKNOWLEDGEMENT 
+ 
+We would like to express our profound gratitude to Prof. Debdatta Chatterjee, Project Supervisor, Prof. 
+(Dr.) Sudipta Sahana, Head of the Department of CSE (AI & ML), and Prof. (Dr.) Sajal Dasgupta, Vice 
+Chancellor,  University of Engineering and Management, Kolkata for their contributions to the completion 
+of my project titled Emotion recognition in conversations using Natural Language Processing . 
+We would like to express special thanks to our project mentor for his/her time and the efforts he/she 
+provided throughout the semester. Your useful advice and suggestions were really helpful to us during the 
+project’s completion. In this aspect, we are eternally grateful to you. 
+We want to acknowledge that this project was completed entirely by ourselves and not by someone else. 
+Last but not least, we would like to extend our warm regards to our family members and peers who have 
+kept supporting us and always had faith in our work. 
+ 
+ 
+Rishav Poddar and Signature with Date>> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+        
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4 
+ 
+TABLE OF CONTENTS 
+ABSTRACT...........................................................................................6 
+ 
+CHAPTER – 1: INTRODUCTION 
+1.1 Overview of Document Analysis Systems .......................................... 7 
+1.2 Role of AI in Document Understanding ............................................. 7 
+1.3 Applications of AI in Document Analysis ........................................... 8 
+CHAPTER – 2: LITERATURE SURVEY 
+ 
+2.1 Overview of Document Analysis using NLP ....................................... 9 
+2.2 Traditional Keyword-Based Search Approaches ............................... 9 
+2.3 Classical Machine Learning Methods .................................................. 9 
+2.4 Deep Learning Approaches (RNN / CNN) ........................................... 9 
+2.5 Transformer-Based Models (BERT, RoBERTa, DistilBERT) …….. 10 
+2.6 Advanced Transformer Techniques ..................................................... 10 
+2.7 Multi-task, Transfer Learning and Domain Adaptation .................... 10 
+2.8 Retrieval Augmented Generation Systems ........................................... 10 
+CHAPTER – 3: PROBLEM STATEMENT  
+ 
+3.1 Problem Definition .................................................................................. 11 
+3.2 Scope of the Problem .............................................................................. 11 
+3.3 Challenges in Existing Systems ............................................................. 12 
+CHAPTER – 4: PROPOSED SOLUTION  
+ 
+4.1 Problem Solution .................................................................................... 13 
+4.2 Overview of Proposed System ............................................................... 13 
+4.3 System Architecture and Working ....................................................... 14 
+4.4 Data Flow Summary .............................................................................. 15 
+4.5 Expected Outcome ................................................................................. 15 
+5 
+ 
+CHAPTER – 5: EXPERIMENTAL SETUP  
+ 
+5.1 Experimental Setup ............................................................................... 17 
+   5.1.1 Dataset Description ............................................................................ 18 
+5.2 Result Analysis ....................................................................................... 19 
+5.3 Performance Evaluation ....................................................................... 19 
+5.4 Limitations ............................................................................................. 20 
+CHAPTER – 6: CONCLUSION & FUTURE SCOPE 
+ 
+6.1 Conclusion ............................................................................................. 21 
+6.2 Future Scope .......................................................................................... 22 
+APPENDIX 
+BIBLIOGRAPHY ..................................................................................................23 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+6 
+ 
+ABSTRACT 
+The digital information is growing fast and that is why we need systems that can look at the information and find 
+the important parts. The old way of searching with keywords does not always work because it does not understand 
+what the words mean in a sentence. So we made a system that uses intelligence to look at documents and find the 
+right information. 
+This system breaks down the documents into pieces and looks for the important things in each piece. Then it 
+makes a kind of map that shows how all the pieces are related to each other. We store these maps in a database so 
+we can find the information again later. When someone asks a question the system turns the question into a map. 
+Compares it to the maps we already have. This way it can find the relevant information. 
+The system also uses language models to make sure the answers are accurate and make sense. We designed the 
+system to handle a lot of work like uploading documents preparing them for analysis making the maps storing 
+them and answering questions. The system is strong and reliable. Can handle a lot of information which makes it 
+good for things like research managing documents for companies and searching for information. 
+We found out that our system is much better at finding the information than the old ways. It uses the artificial 
+intelligence techniques and has a strong foundation, which makes it a good solution for analyzing documents. 
+Maybe one day we can make it even better, by adding pictures and other kinds of information and making it faster. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+UNIVERSITY OF ENGINEERING AND MANAGEMENT, KOLKATA University Area, Plot No. 
+III – B/5, New Town, Action Area – III, Kolkata – 700160 
+ 
+ 
+7 
+ 
+1.0 INTRODUCTION 
+1.1 Overview of Document Analysis Systems 
+We are living in a time where a lot of text is being created every day in areas like education, business, healthcare 
+and research. This text is stored in documents like reports, research papers, emails and contracts.. It is getting very 
+hard for people and organizations to manage and understand the information in these documents. 
+Old document analysis systems mostly relied on people reading the documents or using search tools that looked for 
+specific words. But this method has a problem. It does not understand what the text really means. So people may 
+not find the information they need if it is written in a way. This becomes an issue when there are many documents 
+to go through because it takes a lot of time and can be wrong. 
+To solve these problems new computer techniques have been developed. These techniques are part of something 
+called Natural Language Processing, which allows machines to understand and work with language. Document 
+Analysis Systems that use Natural Language Processing can look at a lot of text. Find useful information on their 
+own. With the development of intelligence Document Analysis Systems have changed from just looking for 
+keywords to actually understanding what the text means. 
+Modern Document Analysis Systems use methods like taking text out breaking it down into parts making it into 
+numbers and searching for meaning. These systems turn text into numbers so machines can see how different texts 
+are related. This helps find information accurately and supports things like making summaries answering questions 
+and searching in context. Document Analysis Systems can do all these things because they can understand what 
+the text is really saying. Document Analysis Systems are getting better, at finding the information people need 
+from the documents. 
+ 
+1.2 Role of AI in Document Understanding 
+Artificial Intelligence (AI) plays a crucial role in transforming traditional document processing into an intelligent 
+and automated system. By leveraging machine learning and deep learning techniques, AI enables systems to 
+analyze large volumes of unstructured text data efficiently and accurately. One of the key advancements in this 
+field is the development of transformer-based models such as BERT, which are capable of understanding the 
+context and semantics of language more effectively than earlier approaches. 
+In AI-powered document analysis, text is first processed and converted into embeddings, which are numerical 
+vector representations capturing the semantic meaning of words, sentences, or entire documents. These 
+embeddings allow the system to perform similarity-based comparisons, enabling semantic search instead of 
+traditional keyword matching. This means that even if the user query does not exactly match the words in the 
+document, the system can still retrieve relevant information based on meaning. 
+The integration of frameworks such as LangChain and pre-trained models from Hugging Face Transformers has 
+further simplified the development of intelligent document analysis systems. These tools allow developers to build 
+pipelines that include text extraction, embedding generation, and retrieval-based question answering. In the 
+proposed system, embeddings are stored in a PostgreSQL database, enabling efficient retrieval of relevant 
+information through similarity search. 
+The AI Powered Document Analyzer Hub leverages these technologies to provide an efficient solution for 
+document analysis. It allows users to upload documents, process their content, and interact with them through 
+intelligent queries. The system reduces manual effort, improves accuracy, and enhances the overall efficiency of 
+information retrieval. By incorporating AI techniques, the proposed system demonstrates a significant 
+advancement over traditional document processing methods and provides a scalable solution for real-world 
+applications. 
+ 
+ 
+ 
+8 
+ 
+1.3 Applications of Artificial Intelligence in Document Analysis 
+Artificial Intelligence is really changing how we look at documents and use the information in them. Artificial 
+Intelligence can look at a lot of text understand what it says and make sense of it. This is very helpful in areas. 
+In schools and when people are doing research Artificial Intelligence helps students and researchers read papers 
+and find the important parts. This saves a lot of time. Helps people get more work done. Companies also use 
+Artificial Intelligence to look at reports, contracts and emails. This helps them make decisions and work more 
+efficiently. 
+Artificial Intelligence is also used in law and money matters to look at documents and make sure everything is 
+okay. It can even find patterns that do not seem right which helps catch cheating and reduce risks. In hospitals 
+Artificial Intelligence helps doctors and nurses look at records and medical reports. This helps them find 
+information quickly. 
+New systems that look at documents use something called Natural Language Processing to understand what the 
+words mean. They use tools like LangChain and Hugging Face Transformers to do things like summarize 
+documents put them into groups and answer questions. This makes them very good at what they do. 
+The Artificial Intelligence Powered Document Analyzer Hub is a system that brings all these things together. It lets 
+people upload documents and work with them in a way. This makes it very useful in areas and shows how 
+important Artificial Intelligence is in how we work with documents now. Artificial Intelligence in document 
+analysis is very helpful. Makes things easier, for people who work with documents. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+9 
+ 
+2.  LITERATURE SURVEY : 
+ 
+2.1 Overview of Document Analysis using NLP: 
+Document analysis has changed a lot with improvements in Natural Language Processing techniques. NLP 
+helps machines understand and process language in a meaningful way. Earlier systems used text 
+processing methods like breaking down text into words removing common words like "the" and "and" and 
+analyzing word frequencies. These methods were okay for tasks but couldn't grasp the context and 
+meaning of the text.People want systems so document analysis now focuses on understanding the meaning 
+of text. New approaches try to get an understanding of text letting systems see how words, sentences and 
+documents relate to each other. 
+These techniques are used in things like summarizing texts finding information analyzing opinions and 
+answering questions. Recently AI has brought in models that can handle large amounts of unstructured 
+data.These models can learn relationships, within text leading to accurate results. As a result NLP is now a 
+part of creating intelligent document analysis systems. Document analysis relies heavily on NLP to 
+understand and process text. NLP enables machines to make sense of language. 
+2.2 Traditional Keyword-Based Search Approaches 
+Traditional document retrieval systems primarily rely on keyword-based search methods. These systems 
+match user queries with exact words or phrases present in the documents. Techniques such as Boolean 
+retrieval and term frequency-based ranking were commonly used to identify relevant documents. 
+One widely used method is TF-IDF (Term Frequency–Inverse Document Frequency), which assigns 
+importance to words based on their frequency in a document relative to their occurrence across multiple 
+documents. Although keyword-based approaches are simple and computationally efficient, they have 
+several limitations. They fail to capture the semantic meaning of the text and are unable to identify 
+relationships between different words that convey similar meanings. 
+For example, a search query containing the word “automobile” may not retrieve documents containing the 
+word “car,” even though both have similar meanings. This limitation reduces the effectiveness of 
+traditional search systems, especially when dealing with large and diverse datasets. 
+2.3 Classical Machine Learning Methods 
+To overcome the limitations of keyword-based approaches, classical machine learning techniques were 
+introduced in document analysis. Algorithms such as Naive Bayes, Support Vector Machines (SVM), and 
+Logistic Regression have been widely used for tasks like text classification, spam detection, and sentiment 
+analysis. 
+These methods typically rely on feature extraction techniques such as bag-of-words and TF-IDF 
+representations. While machine learning models improve performance compared to traditional methods, 
+they still depend heavily on manual feature engineering and lack deep contextual understanding of 
+language. 
+Moreover, classical models struggle with handling large-scale data and complex linguistic patterns. They 
+are not capable of capturing long-range dependencies within text, which limits their effectiveness in 
+advanced document analysis tasks. 
+2.4 Deep Learning Approaches (RNN / CNN) 
+The introduction of deep learning marked a significant advancement in the field of document analysis. 
+Neural network-based models such as Recurrent Neural Networks (RNN) and Convolutional Neural 
+Networks (CNN) have been used to process sequential and structured text data more effectively. 
+RNN-based models are particularly useful for handling sequential data, as they maintain information about 
+previous inputs while processing new data. This allows them to capture contextual relationships within 
+text. However, RNNs suffer from issues such as vanishing gradients, which limit their ability to handle 
+long sequences. 
+10 
+ 
+CNN-based models, on the other hand, are effective in extracting local features and identifying important 
+patterns within text. They are computationally efficient and have been successfully applied to tasks such as 
+sentence classification and document categorization. 
+Despite their advantages, deep learning models still have limitations in capturing global context and 
+require large amounts of training data. This led to the development of more advanced models capable of 
+understanding context more effectively. 
+2.5 Transformer-Based Models (BERT, RoBERTa, DistilBERT) 
+Transformer-based models have revolutionized the field of NLP by introducing mechanisms that allow 
+models to focus on different parts of the input text simultaneously. One of the most influential models is 
+BERT, which uses bidirectional encoding to understand context from both directions of a sentence. 
+Variants such as RoBERTa and DistilBERT further improve performance by optimizing training 
+techniques and reducing model size while maintaining accuracy. These models generate contextual 
+embeddings, which capture the meaning of words based on their surrounding context. 
+Transformer-based models have significantly improved the performance of tasks such as question 
+answering, text summarization, and semantic search. They form the foundation of modern document 
+analysis systems and enable more accurate and efficient processing of text data. 
+2.6 Transformer-Based Models (BERT, RoBERTa, DistilBERT) 
+Transformer-based models have revolutionized the field of NLP by introducing mechanisms that allow 
+models to focus on different parts of the input text simultaneously. One of the most influential models is 
+BERT, which uses bidirectional encoding to understand context from both directions of a sentence. 
+Variants such as RoBERTa and DistilBERT further improve performance by optimizing training 
+techniques and reducing model size while maintaining accuracy. These models generate contextual 
+embeddings, which capture the meaning of words based on their surrounding context. 
+Transformer-based models have significantly improved the performance of tasks such as question 
+answering, text summarization, and semantic search. They form the foundation of modern document 
+analysis systems and enable more accurate and efficient processing of text data. 
+2.7 Multi-task, Transfer Learning and Domain Adaptation: 
+Recent works leverage multi-task learning (predicting multiple emotion labels, sentiment, and 
+intensity jointly), and domain adaptation techniques (fine-tuning on target domain chat logs or 
+using adversarial training) to close the gap between general datasets (Reddit/Twitter) and domain-
+specific conversations (customer support, healthcare). Pretraining on large general corpora 
+followed by careful domain-specific fine-tuning remains the best practical approach. 
+2.8 Retrieval Augmented Generation Systems 
+Retrieval Augmented Generation Systems are a way of doing things. It is a way that combines finding 
+information with making text. First the system finds the information it needs from a database. It uses 
+techniques to search for the information. Then a language model makes a response based on what it found. 
+The Retrieval Augmented Generation Systems make the responses more accurate. They do this by using 
+information. This way of doing things is used in lots of places. For example it is used in chatbots and 
+virtual assistants. It is also used in systems that answer questions, about documents. 
+The AI Powered Document Analyzer Hub works in a way. It. Finds document information using a special 
+kind of search. This search is called search. The system can give responses to what the user asks. It does 
+this by combining the search and the generation of text. The Retrieval Augmented Generation Systems 
+make sure the responses are meaningful and make sense. The Retrieval Augmented Generation Systems 
+are very useful. 
+11 
+ 
+3.1 Problem Definition 
+We live in a time where organizations and individuals create and store a lot of information in documents like 
+PDFs, reports and emails. It is getting harder to manage and find information in these documents because there is 
+just so much of it. The old ways of dealing with documents involve people reading them and searching for words, 
+which takes a long time and is not very efficient. 
+When we search for something using keywords the system looks for matches in the documents. This is a way to do 
+things but it does not understand what the words really mean. This means we often get search results that're not 
+accurate. For example if we search for "data analysis techniques" we might not find documents that talk about 
+"data processing methods" or "analytical approaches" even though they are related. 
+Another big problem with systems is that they cannot handle a large number of documents very well. As we get 
+more documents it becomes harder to find what we need. It takes a time and is prone to mistakes. This is not good 
+enough for things that need to be accurate and quick. 
+Also the systems we have now are not very smart. They cannot understand what we mean when we ask a question 
+or find connections between pieces of text. This makes it hard for us to get information, from big datasets, which 
+can affect how well we work and make decisions. 
+Now that Artificial Intelligence is getting better with Natural Language Processing we need systems that can 
+understand documents in a smarter way. Document analysis systems should be able to understand what the text 
+means handle a lot of data and give us results that make sense. We need these systems to deal with the amounts of 
+Document analysis and data that we have. The Document analysis systems should be able to process the data and 
+provide us with accurate Document analysis results. 
+3.2 Scope of the Problem 
+The issue of document analysis is a big problem that affects many areas where a lot of text data is created and used 
+every day. These areas include research, business organizations, legal systems, healthcare and information 
+technology. In each of these areas users need to find the information they need from big collections of documents 
+quickly and correctly. 
+In research settings students and researchers have to read a lot of research papers, articles and reports to get the 
+information they need. Reading all these documents by hand takes a time and they might miss important details. It 
+is the same in business organizations, where a lot of data is stored in reports, emails and contracts that need to be 
+analyzed to make decisions and plan ahead. 
+In the field professionals work with complex documents like case files, agreements and contracts. Finding parts or 
+information in these documents by hand can be boring and prone to mistakes. In healthcare patient records and 
+medical reports have information that needs to be found quickly and correctly. A good document analysis system 
+can make a difference in how fast and well decisions are made in these situations. 
+The system we are talking about is designed to solve these problems by creating a document analysis platform that 
+uses intelligence. The system is made to work with text-based documents find the information and provide smart 
+search options. It uses methods like creating embeddings and semantic similarity to allow for context-aware 
+information retrieval. 
+The document analysis system uses technologies like FastAPI for the backend and PostgreSQL for storing and 
+managing embeddings. The system lets users upload documents turn them into organized representations and do 
+searches based on similarity to find the information they need quickly. 
+However the current system only works with text-based documents. It does not fully support things like images, 
+audio or video files. Also dealing with documents, in languages and complex data formats is still a challenge and 
+could be improved in the future. The document analysis system needs to be able to handle these things to be really 
+useful. The document analysis system is a tool that can help people in many areas. 
+ 
+ 
+12 
+ 
+3.3 Challenges in Existing Systems 
+There are problems with the systems we have now for handling documents. Even though we have a lot of tools for 
+processing documents we still have some issues. One of the problems is that the search systems that use keywords 
+do not really understand what people are looking for. These systems cannot figure out what the person wants so 
+they give us results that're not what we need or they do not give us all the information. 
+Another big problem is that these systems can become slow when we have a lot of documents. When the number 
+of documents gets really big the old systems start to have trouble. We need ways to store organize and find 
+documents quickly which the old ways cannot do.We also have a lot of trouble when we try to get information 
+from documents. Sometimes documents have mistakes extra information we do not need or they are not formatted 
+well. This can make it hard to get the information from them. We need ways to clean up the documents and get the 
+information we need. Making embeddings, which are like maps of what the documents are about and searching for 
+similar documents quickly can take a lot of computer power. We also need to be able to store and get these 
+embeddings quickly which is another challenge. We can use databases, like PostgreSQL to store them. We still 
+need to make sure they work well with a lot of documents. 
+All these challenges show that we need a system that can handle documents in a smart way understand what people 
+are looking for and work well even with a lot of documents. We need document processing systems that're 
+advanced and can work with a lot of documents and document analysis systems that can understand what people 
+are looking for and systems that can handle a lot of documents, which are the document systems. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+13 
+ 
+4.1 Problem Solution 
+The AI Powered Document Analyzer Hub is a system that helps with ways of looking at documents. It uses ideas 
+from Natural Language Processing to make things better. This system is different from others because it does not 
+just look for keywords it tries to understand what the words really mean. This helps people find the information 
+they need easily and accurately. 
+When you put a document into the system it changes the document into a form that's easy to look at. The system 
+takes the words out of the document. Breaks them down into smaller parts. These parts are then turned into 
+numbers that show what the words mean. The AI Powered Document Analyzer Hub uses these numbers to help 
+people find information even if they use different words. This is really helpful because people can find what they 
+need even if they do not know the words to use. 
+The AI Powered Document Analyzer Hub makes it so people do not have to look at documents by hand much. It 
+helps people work with documents in a natural way. They can ask the AI Powered Document Analyzer Hub 
+questions. Get exact answers based on what is in the documents. This makes it faster and more accurate to get 
+information from a lot of data. The AI Powered Document Analyzer Hub is very useful, for the AI Powered 
+Document Analyzer Hub. 
+4.2 Overview of the Proposed System 
+The system for solving the problem is like a series of steps that work together. This system starts with the 
+user uploading documents to the interface. The documents that are uploaded are then looked at closely to 
+get the text out of them. This text is then cleaned up to get rid of things that are not needed like 
+formatting that does not look right and other noise. This step makes sure that the text is quality and ready 
+for the next steps. 
+After the text is cleaned up it is broken down into pieces so it can be handled and looked at more easily. 
+Each small piece is then turned into something called an embedding using models. These embeddings 
+show what the text really means and are used for searching. The embeddings that are made are stored in a 
+database using PostgreSQL, which's good for storing and getting back special kinds of data. 
+When a user asks a question the system looks at it in a way by turning it into an embedding. This 
+embedding of the question is then compared to the embeddings of the documents that are stored. The 
+system looks for the text that's most relevant and gets it based on how close it is to the question. The text 
+that is gotten back is then used to make a response that's meaningful and takes into account the context. 
+This means the user gets the information quickly. 
+The backend of the system which's the part that the user does not see is made using FastAPI. This makes 
+the system work well and handle many requests at the same time. The system uses tools and databases 
+which means it can handle a lot of data and is scalable. The document processing and analysis system is 
+very good, at handling datasets and providing accurate information. The document analysis system is 
+made to be efficient and provide results. 
+14 
+ 
+ 
+                                                           Image 1.1 (System Architecture) 
+4.3 System Architecture and Working 
+The architecture of the proposed system is designed to ensure smooth interaction between different components 
+involved in document analysis. The system consists of multiple layers that work together to process user inputs and 
+generate outputs efficiently. 
+At the front end, users interact with the system by uploading documents and submitting queries. These requests are 
+handled by the backend API, which is responsible for coordinating all operations within the system. The backend, 
+built using FastAPI, manages tasks such as document processing, embedding generation, and query handling. 
+The document processing module plays a crucial role in extracting and preparing text from uploaded files. It 
+ensures that the data is cleaned and divided into manageable chunks. These chunks are then passed to the 
+embedding module, where they are converted into vector representations. The embeddings are stored in 
+PostgreSQL, which acts as the central storage system for both text data and their corresponding vector 
+representations. 
+When a query is received, the retrieval module converts it into an embedding and performs a similarity search 
+against the stored embeddings. This process identifies the most relevant pieces of information from the document. 
+The response generation module then uses these results to construct a meaningful answer, which is returned to the 
+user. 
+The architecture is designed to be modular and scalable, allowing additional features such as image processing or 
+multilingual support to be integrated in the future without major modifications. 
+4.4 Data Flow Summary: 
+ 
+User uploads document → API receives → stored to S3 + metadata saved → enqueue ingestion 
+job. 
+15 
+ 
+ 
+Worker extracts & cleans text → chunks → embeddings → vector DB. 
+ 
+When user asks a query: embed query → retrieve chunks → LLM produces answer. 
+ 
+If user uploads chat logs or uses the chat interface: emotion classifier processes text → outputs 
+emotion data → UI shows analytics. 
+ 
+Everything is multi-tenant (per organisation), secure, and isolated. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                   Image 1.2 (Data Flow Diagram) 
+4.5 Expected Outcome 
+The proposed system is expected to significantly improve the efficiency and effectiveness of document 
+analysis. By leveraging semantic search and embedding-based retrieval, the system enables users to 
+access relevant information quickly and accurately. It reduces the need for manual reading and simplifies 
+the process of extracting insights from large volumes of data. 
+The system also enhances user experience by allowing natural language interaction with documents. 
+Users can ask questions in a conversational manner and receive precise answers without needing to 
+search through entire documents. This makes the system particularly useful in environments where quick 
+access to information is critical. 
+16 
+ 
+Overall, the AI Powered Document Analyzer Hub provides a scalable and intelligent solution for 
+document processing. It demonstrates how modern technologies such as Natural Language Processing, 
+FastAPI, and PostgreSQL can be integrated to build an efficient and user-friendly system for analyzing 
+unstructured data. 
+ 
+ 
+                                                                       Image : 1.3(overall Architecture) 
+             
+ 
+ 
+ 
+ 
+                Image 1.4 (ER Diagram of a Database) 
+                                            
+17 
+ 
+5: EXPERIMENTAL SETUP : 
+5.1 Experimental Setup 
+5.1 Experimental Setup 
+The AI Powered Document Analyzer Hub is tested to see how well it works with documents. The system 
+uses technologies and artificial intelligence to process and retrieve information. 
+The system is built using FastAPI, which handles API requests quickly. This means it can deal with user 
+requests at the same time without slowing down. The information from documents is stored in 
+PostgreSQL, which manages data and details. 
+The system runs on a computer with a multi-core processor, enough RAM and local storage. This shows 
+that it does not need a powerful computer and can work on typical machines. 
+Here is how the test works: 
+ Documents are uploaded to the system. 
+ The system extracts text, from the documents. Breaks it into smaller parts. 
+ Each part is converted into a code using transformer-based models. 
+ The codes are stored in the database. Used to find similar information when a query is made. 
+The system is judged on how it finds relevant information and how fast it does so. Test queries are given 
+to the system and its responses are checked for accuracy, relevance and response time. 
+The AI Powered Document Analyzer Hub is evaluated based on its ability to retrieve information 
+accurately and efficiently. 
+The AI Powered Document Analyzer Hub uses FastAPI and PostgreSQL. 
+The AI Powered Document Analyzer Hub is tested with test queries. 
+The system responses generated are analyzed for correctness, relevance and response time. 
+ 
+ 
+ 
+ 
+ 
+Image 1.5(Server Running in Localhost) 
+18 
+ 
+5.1.1 Dataset Description 
+The dataset we are using for this project is a collection of text-based documents. These documents 
+include things like PDFs, academic papers and regular text files. The documents have a lot of text in 
+them which we use as the input for our document analysis system. 
+Our dataset is not about one specific topic. It has all kinds of things in it so we can test our system with 
+different types of content. This way we can see if our system can handle real-life situations where 
+documentsre all different in terms of how they are set up how long they are and how complicated they 
+are. We clean up the documents by taking out formatting and noise so we are left with just the plain text. 
+We break each document into pieces so our system can work with them more easily. Breaking them up 
+like this really helps our system get the answers because it can focus on just a small part of the text at a 
+time. We take these pieces and turn them into something called embeddings and then we store them in a 
+database called PostgreSQL. 
+We use the dataset to test things about our system like how it takes in documents makes embeddings 
+searches for similar things and generates answers. By using a dataset with different things in it we can see 
+how well our system works and if it can adapt to new things. The dataset helps us make sure our system 
+is good, at handling all kinds of documents and that it is strong and can work well in situations. 
+ 
+ 
+ 
+ 
+ 
+ 
+Image 1.6(Uploading Document) 
+ 
+ 
+    
+ 
+ 
+ 
+19 
+ 
+5.2 Result Analysis 
+The AI Powered Document Analyzer Hub works well. We looked at how it does in a few areas like accuracy how 
+long it takes to respond and how relevant the results are. This system is a lot better than the way of searching with 
+keywords. It gives us results that make sense because it understands the context. 
+When we tested it the system found the relevant parts of documents when we asked it questions. It could even find 
+the parts when our question was not exactly the same as the words in the document. This is because it uses 
+something called embeddings to find meanings. This shows that Natural Language Processing is really good at 
+helping us find the information we need. 
+The system also responds quickly. It uses something called FastAPI to handle requests. When it looks for things in 
+the database it gives us results fast. This makes it good for things that need to happen in time. 
+The system is also good at finding the information in documents.. How well it does depends on things like how 
+good the embeddings are and how we prepare the documents. If we adjust these things the system will work better. 
+The results show that the AI Powered Document Analyzer Hub is really good, at looking at documents and giving 
+us information. It saves people a lot of time and effort when they have to review documents. This makes people 
+more productive when they use the AI Powered Document Analyzer Hub. 
+ 
+ 
+ 
+ 
+Image 1.7(Document chunk is getting saved in database) 
+5.3 Performance Evaluation 
+The system is evaluated using qualitative and quantitative measures. Qualitatively, the responses generated by the 
+system are assessed based on their relevance and coherence. Quantitatively, performance can be measured using 
+metrics such as response time and retrieval accuracy. 
+The system shows strong performance in semantic retrieval tasks, where it outperforms traditional search methods. 
+The use of embeddings allows the system to understand the context of both documents and queries, leading to 
+more accurate results. Additionally, the scalable architecture ensures that the system can handle increasing 
+amounts of data without significant performance loss. 
+5.4 Limitations We Found During Testing 
+We noticed some problems with our system while testing. One big issue is dealing with documents that have 
+pictures or scanned text. This is hard because our system is mainly designed for text data. Also how well our 
+20 
+ 
+system works depends on the quality of the embeddings it creates. Different models can produce embeddings of 
+qualities. 
+Another problem is that creating embeddings can be expensive in terms of computer power, for huge datasets. Our 
+system works fine with an amount of work but it might need more optimization if we want to use it on a really 
+large scale. 
+ 
+ 
+ 
+ 
+ 
+   Image 1.8(Metadata of document is getting saved in Database) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+21 
+ 
+6.0 : CONCLUSION & FUTURE SCOPE 
+6.1 Conclusion 
+The Document Analyzer Hub is really good at showing how we can use technologies to make it easier to 
+look at documents. This project made a system that can look at documents that are not organized and find 
+important information using special ways of understanding language. 
+The system is better than ways of searching that just look for keywords. It uses a kind of search that 
+understands what the documents and what people are asking mean. This makes the answers more 
+accurate and relevant. The system uses FastAPI to make sure the backend works well and PostgreSQL to 
+store and manage information. 
+The system worked well throughout the project. It could look at documents quickly make codes for them 
+and find similar documents. The results showed that the system gives answers and saves a lot of time that 
+people would have spent looking at documents manually. It also lets people ask questions in a natural 
+way. 
+The Document Analyzer Hub shows how important it is to use intelligence to deal with large amounts of 
+unorganized information. It provides a way to look at documents that's fast and efficient which is useful 
+in many areas, like schools, businesses and research. The Document Analyzer Hub makes it easier to 
+work with documents. That is a big deal. 
+ 
+ 
+ 
+ 
+ 
+ 
+Image 1.9 (User is login and granted JWT Token) 
+ 
+ 
+ 
+ 
+ 
+ 
+22 
+ 
+ 
+ 
+ 
+ 
+ 
+Image 1.10(API Documentation using FastAPI Swagger) 
+6.2 Future Scope 
+The current system works well for text-based documents. There are ways to make it even better. One big 
+improvement would be to add image processing so it can extract information from scanned documents and images 
+using Optical Character Recognition (OCR). 
+Another thing that could be improved is handling documents in languages. Now it mainly focuses on one language 
+but if it could handle many languages it would be more useful worldwide. 
+The system could also get better by using advanced models from Hugging Face Transformers. This would make 
+the system more accurate. Also using a mix of keyword and semantic search could help it find what you are 
+looking for easily. 
+To make it handle data it could use special databases designed for large amounts of data. Putting it on a platform 
+would also make it work better and be easier to use. 
+A cool new feature could be AI, which lets users chat with documents. This would make the system more friendly 
+and useful for real-time applications. 
+In conclusion the AI Powered Document Analyzer Hub is a start for intelligent document processing. With 
+improvements and new technologies it could become a powerful tool, for extracting knowledge and making 
+decisions with AI Powered Document Analyzer Hub. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+23 
+ 
+BIBLIOGRAPHY: 
+[1] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. 
+Polosukhin, “Attention is All You Need,” Advances in Neural Information Processing Systems 
+(NeurIPS), 2017. [Online].  
+Available: https://arxiv.org/abs/1706.03762 
+[2] J. Devlin, M. W. Chang, K. Lee, and K. Toutanova, “BERT: Pre-training of Deep Bidirectional 
+Transformers for Language Understanding,” Proceedings of the North American Chapter of the 
+Association for Computational Linguistics: Human Language Technologies (NAACL-HLT), 2019. 
+[Online]. Available: https://arxiv.org/abs/1810.04805 
+[3] Y. Liu, M. Ott, N. Goyal, J. Du, M. Joshi, D. Chen, O. Levy, M. Lewis, L. Zettlemoyer, and V. 
+Stoyanov, “RoBERTa: A Robustly Optimized BERT Pretraining Approach,” Facebook AI Research, 
+2019. [Online]. Available: https://arxiv.org/abs/1907.11692 
+[4] M. U. Hadi and P. K. Bhowmick, “Emotion Recognition in Conversations using Deep Learning and 
+NLP,” IEEE Access, vol. 10, pp. 105487–105502, 2022. [Online].  
+Available: https://doi.org/10.1109/ACCESS.2022.3200124 
+[5] K. Shuster, D. Ju, S. Roller, E. Dinan, and J. Weston, “The Dialogue Dodecathlon: Open-Domain 
+Knowledge and Emotion-Aware Dialogue Agents,” arXiv preprint, 2020. [Online]. Available: 
+https://arxiv.org/abs/1911.03768 
+[6] LangChain Documentation, “Building Context-Aware LLM Applications,” 2024. [Online]. 
+Available: https://python.langchain.com 
+[7] OpenAI Documentation, “Retrieval-Augmented Generation (RAG) and Embeddings,” 2024. [Online]. 
+Available: https://platform.openai.com/docs 
+[8] G. Sahu, S. Gupta, and R. Kumar, “AI-Powered Document Analysis using NLP and Vector 
+Databases,” International Journal of Artificial Intelligence Research, vol. 8, no. 2, 2023. 
+[9] V. Sanh, L. Debut, J. Chaumond, and T. Wolf, “DistilBERT: A Distilled Version of BERT for 
+Smaller and Faster NLP Models,” arXiv preprint, 2019. [Online]. Available: 
+https://arxiv.org/abs/1910.01108 
+[10] FastAPI & Redis Official Documentation, “High-Performance Asynchronous Processing for NLP 
+Pipelines,” 2024. [Online]. Available: https://fastapi.tiangolo.com | https://redis.io 
+ 
