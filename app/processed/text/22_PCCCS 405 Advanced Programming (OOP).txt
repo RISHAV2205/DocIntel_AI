@@ -1,0 +1,170 @@
+INSTITUTE OF ENGINEERING & MANAGEMENT, KOLKATA
+iSch0sl al Universily of EirEineering aild []!ana$ement, K0lkata)
+End Semester Examination, April - May, 2025
+Degree: B,Tech, Semester: Fourth
+Stream: CSE(AI & ML)/ CSE(IOT, CS, BT)/
+csE/cstT I csT / csE(AI)/CSE(IoT)/ csBs/IT
+Paper Code: PCCCS4OS
+Paper Name: Advanced Programming (OOP)
+Full Marks: 1OO 
+Duration: 3 Hours
+Part - A
+Attempt any 10 questions out of 15 questions
+Each question carries 2 Marks (2 x 10)
+Why Java is called Architectural?
+2. Explain each terr of the follor'ving: public static void rnain (String [] args).
+3. Hou does JavaScript dift-er fi'om Java, and what is their relationship in web 2
+development?
+4. Write a program to print a string in reverse order.
+5. Is it possible to call one constructor fiom another in a class with multiple constructors? 2
+If so, how is it achieved in Java?
+6. Compare and contrast overloading and overriding methods.
+7. Explain the syntax of BufferedReader object creation.
+8. How does thread scheduling work in Java, and what factors influence the execution 2
+order ofthreads?
+9. 
+h-r multi-threading how can we ensllre that a resource isn't used by multiple threads 2
+simultaneously?
+10. What are three concrete implernentalions ot-the l,ist interface in Java, and how do thel 
+2
+differ in fr-rnctionality?
+11. Define the llierarchy of Collection Framework in Java.
+Page 1 of 3
+I
+2
+2
+2
+)
+'l
+2
+,,
+)
+4
+')
+1
+)
+I
+)
+dt
+,|,
+,l
+2
+1
+)
+it
+Page 1 of 3
+b
+-
+>
+12. What is a Model?
+13.
+14.
+2
+2
+what.are the primary goals of UML (Unifie<1 Modeling Language), and horv do they
+contribute to software development?
+Erplain the pr-rrpose and application of the AWT (Abstract windou, Ibolkit) package
+':. l-11-1 highlighrirg irs ,sage and rerer ance rr ithin rhe Java pr.ograrnrnirrg
+envlronlnent.
+2
+2
+Explain the different lifecycle methods of an Android Activity and their role in
+handiing state changes.
+part _ B
+Attempt any 6 questions out of 9 questions
+Each question carries 5 Marks (5 x 6)
+16' PtygloP a diagram.illustrating the process of compiling and interpreting Java code, 5
+highlighting the role of the Just-Ir-Ti*" compilei (ni) and its significance in this
+process.
+15.
+17' Develop a Java application to generate Electricity bills. create a class with the
+follou'ing rnembers: consumer no., aonr,.rtr-ta. nr-., pr"uio.,r month reading, current
+t-nonth reading, and type of EB connection (i.e., domesiic or commercial). compLrte the
+bill amount using the following tariff. If tire type of the EB connection is domestic.
+calculate the amonnt to be paid as follows:
+First 100 units - Rs. 1 per unit
+101 -200 units - Rs. 2.50 per unit
+201 -500 units - Rs. 4 per unit
+> 501 units - Rs. 6 per unit
+5
+l8' Explain the different types of operators in Java with suitable examples fbr each. 
+5
+19' Evaluate the role of abstract classes in Java inheritance. Analyse the advantages and 5
+limitations of using abstract classes compared to interfaces in object-oriented jesign.
+20. Explain yieldQ and join0 with proper code snippet. 
+5
+2l' Implement a java program to remove all the repeated element from the Anaylist. 
+5
+22' Dernonstrate the use of annotations in Java by writing a program and explaining its 
+5
+functi onality with examples.
+23. Explain intenrar structure diagrar-n with a suitable example. 
+5
+24' Difference betu'een Su'ing and AW r. write a Swing Program to use l'extField, Br-rtton. 5
+Page 2 of 3
+I
+-x
+at
+-
+Part - C
+Affempt any 5 questions out of 8 questions
+Each question carries 10 Marks (10 x 5)
+25. Describe the architecture of the Java Mrhral Machine (fVM) with a detailed diagram, l0
+explaining the flrnctionality of each component.
+26. a) Describe broadcast receivers. Ilorv is it irrplemented?
+b) Explain each token in the statement: Systern.out.println("Hello Java,,);
+27. Design an abstract class shape having two methods calculate_area0 and display().
+Create rectangle, triangle, and ellipse classes by inheriting the shape class and
+ovemiding the above rrethods to suitably implement rectangle, triangle, and ellipse
+classes.
+28. What is array of objects? Describe the use of Access Modifiers in Java? Draw a table
+showing the scope of accessibility? Justify:
+a) Why we declare main 0 method as public and static member?
+b) Why we generally declare constructor as public member?
+c) Why there is no destructor in java?
+IO
+10
+10
+10
+,o
+Erplain the concept of multithreading in Java, highlighting its key features and
+illlportance. Write a Java program to demonstrate the creation and execution of
+rnultiple threads using both the Thread class and the RLrnnable interface. Additionally,
+discuss the advantages of multithreading in Java applications and how it improves
+perfonnance and resource utilization.
+30. Write a Java program that implements a method to take a HashSet as input and remove
+all duplicate elements. Explain the working of HashSet in preventingduplicates and
+discuss its advantages over other collection t1pes. Addiiionally, demonstrate the
+program with sample input and output.
+31. The Library Loan System manages the loans and circulation of library resource
+material such as books, journals and audiovisuals. Students and faculty enjoy
+membership at the library. During checkout, the LLS obtains the student or faculty iO.
+Resource materials can be checked out (i.e. borrowed) for a duration of 2 weeks. A fine
+of I rupee a day is imposed on overdue materials. Draw a detailed Class diagram.
+32. Develop a Java GtlI application using the Swing package that includes a Text Field,
+Button, and Label. Implement an event-drir"n approach where clicking the button
+retrieves the text entered in the text field and dispiays it in the label. Eisure proper
+layout management and demonstrate the functionility with a complete Java prograrn,
+including sample input and output
++gJJJJJ-'--r--r-
+10
+10
+10
+Page 3 of 3
+ir
+2
+nfu
+2
+,
+)
+)
+a
+)
+,
+)
+,,tr
+t
+)
+Page 1 o{ 3
+n
+)

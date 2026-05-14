@@ -7,6 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from sqlalchemy import text
 import json
+from app.services.llm import generate_answer
 
 router = APIRouter()
 
@@ -55,10 +56,11 @@ def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = De
 
     top_chunks = [texts[i] for i in top_indices]
     top_scores = [float(similarities[i]) for i in top_indices]
+    
+    ans= generate_answer(request.query, top_chunks)
 
     # Step 5: Return result
     return {
         "query": request.query,
-        "top_chunks": top_chunks,
-        "similarity_scores": top_scores
+        "result":ans
     }
