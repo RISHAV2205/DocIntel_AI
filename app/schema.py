@@ -46,4 +46,5 @@ class ChatCreate(BaseModel):
     title: Optional[str] = "New Chat"
     
 
-    
+class MessageRequest(BaseModel):
+    query: str    

@@ -10,15 +10,12 @@ from . import models,schema,utils
 from sqlalchemy.orm import Session
 from .database import engine,session_local,get_db
 from passlib.context import CryptContext
-from .router import post, user,auth,documents,query,chat
+from .router import post, user,auth,documents,query,chat,chat_message
 
 
  
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-
-
-
 
 # connect to database
 while True:       
@@ -52,3 +49,4 @@ app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(query.router)
 app.include_router(chat.router)
+app.include_router(chat_message.router)

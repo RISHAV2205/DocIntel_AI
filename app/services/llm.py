@@ -14,37 +14,68 @@ headers = {
 }
 
 
-def generate_answer(query, chunks):
+# def generate_answer(query, chunks):
 
-    context = "\n\n".join(chunks)
-    prompt = f"""
-    Answer the question only using the provided context.
+#     context = "\n\n".join(chunks)
+#     prompt = f"""
+#     Answer the question only using the provided context.
 
-    Context:
-    {context}
+#     Context:
+#     {context}
 
-    Question:
-    {query}
-    """
+#     Question:
+#     {query}
+#     """
 
+#     payload = {
+#         "model": "deepseek-ai/DeepSeek-V4-Flash",
+        
+#         "messages": [
+#             {
+#                 "role": "system",
+#                 "content": "You are a helpful AI document assistant."
+#             },
+#             {
+#                 "role": "user",
+#                 "content": prompt
+#             }
+#         ],
+
+#         "max_tokens": 200,
+#         "temperature": 0.5
+#     }
+
+#     response = requests.post(
+#         API_URL,
+#         headers=headers,
+#         json=payload
+#     )
+
+#     print("STATUS:", response.status_code)
+#     print("RAW RESPONSE:", response.text)
+
+#     if response.status_code != 200:
+#         return {
+#             "error": response.text
+#         }
+
+#     result = response.json()
+
+#     return result["choices"][0]["message"]["content"]
+
+
+def generate_answer(prompt):
     payload = {
         "model": "deepseek-ai/DeepSeek-V4-Flash",
-
         "messages": [
-            {
-                "role": "system",
-                "content": "You are a helpful AI document assistant."
-            },
             {
                 "role": "user",
                 "content": prompt
             }
         ],
-
-        "max_tokens": 200,
+        "max_tokens": 300,
         "temperature": 0.5
     }
-
     response = requests.post(
         API_URL,
         headers=headers,
@@ -55,10 +86,10 @@ def generate_answer(query, chunks):
     print("RAW RESPONSE:", response.text)
 
     if response.status_code != 200:
-        return {
-            "error": response.text
-        }
+        return "LLM Error"
 
     result = response.json()
 
-    return result["choices"][0]["message"]["content"]
+    answer = result["choices"][0]["message"]["content"]
+
+    return answer
