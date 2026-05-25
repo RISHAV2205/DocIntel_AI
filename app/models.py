@@ -28,6 +28,7 @@ class user(Base):
     id =Column(Integer,primary_key=True,nullable=False,autoincrement=True)
     created_at=Column(TIMESTAMP(timezone=True),nullable=False,server_default=text("now()"))
     posts = relationship("post", back_populates="owner")
+    chats = relationship("Chat",backref="owner",cascade="all, delete-orphan")
     
     
 class Document(Base):
@@ -60,3 +61,70 @@ class DocumentChunk(Base):
     # Relationship
     document = relationship("Document", back_populates="chunks")
     
+
+class Chat(Base):
+    __tablename__ = "chats"
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        autoincrement=True
+    )
+    title = Column(
+        String,
+        default="New Chat"
+    )
+    owner_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("now()")
+    )
+    # Relationship
+    messages = relationship(
+        "Message",
+        back_populates="chat",
+        cascade="all, delete-orphan"
+    )
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        autoincrement=True
+    )
+
+    chat_id = Column(
+        Integer,
+        ForeignKey("chats.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    role = Column(
+        String,
+        nullable=False
+    )
+
+    content = Column(
+        Text,
+        nullable=False
+    )
+
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("now()")
+    )
+
+    # Relationship
+    chat = relationship(
+        "Chat",
+        back_populates="messages"
+    )

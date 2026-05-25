@@ -10,7 +10,7 @@ from . import models,schema,utils
 from sqlalchemy.orm import Session
 from .database import engine,session_local,get_db
 from passlib.context import CryptContext
-from .router import post, user,auth,documents,query
+from .router import post, user,auth,documents,query,chat
 
 
  
@@ -51,3 +51,4 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(query.router)
+app.include_router(chat.router)

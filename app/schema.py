@@ -42,5 +42,8 @@ class token(BaseModel):
 class TokenData(BaseModel):
     id :Optional[str]=None
     
+class ChatCreate(BaseModel):
+    title: Optional[str] = "New Chat"
+    
 
     
