@@ -100,7 +100,7 @@ def send_message(
     context = "\n\n".join(final_chunks)
 
     final_prompt = f"""
-    You are a helpful AI assistant.
+    You are a helpful AI assistant. give short and straightforward answer for each que
 
     Conversation History:
     {history}
@@ -123,6 +123,8 @@ def send_message(
     role="assistant",
     content=answer
     )
+    
+    print(answer)
 
     db.add(assistant_message)
     db.commit()
