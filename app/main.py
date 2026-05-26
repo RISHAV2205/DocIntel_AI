@@ -12,7 +12,7 @@ from .database import engine,session_local,get_db
 from passlib.context import CryptContext
 from .router import post, user,auth,documents,query,chat,chat_message
 
-
+from fastapi.middleware.cors import CORSMiddleware
  
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -28,6 +28,17 @@ while True:
         print("connecting to database failed")
         print("error :", error)
         time.sleep(3)
+    
+#communicate with frontent
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # my_post=[{"title":"hello","content":"vjfjv","id":1}]
