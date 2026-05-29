@@ -7,7 +7,7 @@ model = CrossEncoder(
 def rerank(query, chunks, top_k=5):
 
     pairs = []
-
+    # print(chunks)
     for chunk in chunks:
         pairs.append((query, chunk))
     scores = model.predict(pairs)

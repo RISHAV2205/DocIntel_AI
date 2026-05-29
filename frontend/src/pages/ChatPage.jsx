@@ -1,13 +1,97 @@
-import { useState } from "react";
+// React hooks
+import { useEffect, useState } from "react";
+
+// Axios API instance
 import API from "../services/api";
 
 function ChatPage() {
-    const [chatId, setChatId] = useState("");
+
+    // =========================================
+    // STATE VARIABLES
+    // =========================================
+
+    // Store all chats of logged-in user
+    const [chats, setChats] = useState([]);
+
+    // Store currently selected chat id
+    const [chatId, setChatId] = useState(null);
+
+    // Store all messages of active chat
+    const [messages, setMessages] = useState([]);
+
+    // Store current user input
     const [message, setMessage] = useState("");
-    const [response, setResponse] = useState("");
+
+    // Store selected file
     const [file, setFile] = useState(null);
 
-    // CREATE CHAT
+
+    // =========================================
+    // LOAD ALL CHATS
+    // =========================================
+
+    // Calls:
+    // GET /chat/
+    //
+    // Loads all previous chats
+    // of current logged-in user
+    const loadChats = async () => {
+
+        try {
+
+            const response = await API.get("/chat/");
+
+            console.log(response.data);
+
+            // Save chats in state
+            setChats(response.data);
+
+        } catch (error) {
+
+            console.log(error.response?.data);
+        }
+    };
+
+
+    // =========================================
+    // LOAD ALL MESSAGES OF CHAT
+    // =========================================
+
+    // Calls:
+    // GET /chat/{chat_id}/messages
+    //
+    // Loads old conversation messages
+    const loadMessages = async (id) => {
+
+        try {
+
+            const response = await API.get(
+                `/chat/${id}/messages`
+            );
+
+            console.log(response.data);
+
+            // Save all chat messages
+            setMessages(response.data);
+
+            // Set active chat id
+            setChatId(id);
+
+        } catch (error) {
+
+            console.log(error.response?.data);
+        }
+    };
+
+
+    // =========================================
+    // CREATE NEW CHAT
+    // =========================================
+
+    // Calls:
+    // POST /chat/create/
+    //
+    // Creates new chat session
     const createChat = async () => {
 
         try {
@@ -18,10 +102,25 @@ function ChatPage() {
                     title: "New Chat"
                 }
             );
-            console.log("CHAT ID:", response.data.chat_id);
+
             console.log(response.data);
 
-            setChatId(response.data.chat_id);
+            // Newly created chat
+            const newChat = response.data;
+
+            // Add new chat in sidebar
+            setChats((prev) => [
+                newChat,
+                ...prev
+            ]);
+
+            // Set active chat
+            setChatId(
+                newChat.id || newChat.chat_id
+            );
+
+            // Clear previous messages
+            setMessages([]);
 
             alert("Chat Created");
 
@@ -33,14 +132,26 @@ function ChatPage() {
         }
     };
 
+
+    // =========================================
     // UPLOAD DOCUMENT
+    // =========================================
+
+    // Calls:
+    // POST /documents/upload
+    //
+    // Uploads document for RAG pipeline
     const uploadDocument = async () => {
 
+        // Check file selected or not
         if (!file) {
+
             alert("Select a file first");
+
             return;
         }
 
+        // Create form data
         const formData = new FormData();
 
         formData.append("file", file);
@@ -52,7 +163,8 @@ function ChatPage() {
                 formData,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data"
+                        "Content-Type":
+                            "multipart/form-data"
                     }
                 }
             );
@@ -69,26 +181,81 @@ function ChatPage() {
         }
     };
 
-    // SEND MESSAGE
+
+    // =========================================
+    // SEND MESSAGE TO AI
+    // =========================================
+
+    // Calls:
+    // POST /chat/{chat_id}/message
+    //
+    // Backend performs:
+    // - embedding generation
+    // - vector search
+    // - reranking
+    // - conversation memory
+    // - LLM generation
     const sendMessage = async () => {
 
+        // Check chat selected
         if (!chatId) {
+
             alert("Create chat first");
+
+            return;
+        }
+
+        // Prevent empty messages
+        if (!message.trim()) {
+
             return;
         }
 
         try {
 
+            // Store current user message
+            const currentMessage = message;
+
+            // Create user message object
+            const userMessage = {
+
+                role: "user",
+
+                content: currentMessage
+            };
+
+            // Instantly show user message
+            setMessages((prev) => [
+                ...prev,
+                userMessage
+            ]);
+
+            // Clear input box
+            setMessage("");
+
+            // Send query to backend
             const response = await API.post(
-            `/chat/${chatId}/message`,
-            {
-                query: message
-            }
+                `/chat/${chatId}/message`,
+                {
+                    query: currentMessage
+                }
             );
 
             console.log(response.data);
 
-            setResponse(response.data.response);
+            // AI response object
+            const aiMessage = {
+
+                role: "assistant",
+
+                content: response.data.response
+            };
+
+            // Add AI response in chat
+            setMessages((prev) => [
+                ...prev,
+                aiMessage
+            ]);
 
         } catch (error) {
 
@@ -98,65 +265,243 @@ function ChatPage() {
         }
     };
 
+
+    // =========================================
+    // LOAD CHATS ON PAGE LOAD
+    // =========================================
+
+    useEffect(() => {
+
+        loadChats();
+
+    }, []);
+
+
+    // =========================================
+    // UI SECTION
+    // =========================================
+
     return (
 
-        <div style={{ padding: "20px" }}>
+        <div
+            style={{
+                display: "flex",
+                height: "100vh"
+            }}
+        >
 
-            <h1>AI Document Chat</h1>
+            {/* =====================================
+                SIDEBAR SECTION
+            ===================================== */}
 
-            <hr />
+            <div
+                style={{
+                    width: "25%",
+                    borderRight: "1px solid gray",
+                    padding: "10px",
+                    overflowY: "auto"
+                }}
+            >
 
-            {/* CREATE CHAT */}
+                <h2>Chats</h2>
 
-            <button onClick={createChat}>
-                Create Chat
-            </button>
+                {/* CREATE CHAT BUTTON */}
 
-            <br /><br />
+                <button
+                    onClick={createChat}
+                    style={{
+                        width: "100%",
+                        padding: "10px"
+                    }}
+                >
+                    + New Chat
+                </button>
 
-            <p>Current Chat ID: {chatId}</p>
+                <hr />
 
-            <hr />
+                {/* DISPLAY ALL CHATS */}
 
-            {/* UPLOAD DOCUMENT */}
+                {
+                    chats.map((chat) => (
 
-            <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-            />
+                        <div
+                            key={chat.id || chat.chat_id}
 
-            <button onClick={uploadDocument}>
-                Upload Document
-            </button>
+                            // Load messages on click
+                            onClick={() =>
+                                loadMessages(
+                                    chat.id || chat.chat_id
+                                )
+                            }
 
-            <hr />
+                            style={{
+                                padding: "10px",
+                                cursor: "pointer",
+                                borderBottom:
+                                    "1px solid #ccc",
+                                marginBottom: "5px"
+                            }}
+                        >
 
-            {/* MESSAGE INPUT */}
+                            {/* Chat title */}
 
-            <textarea
-                rows="5"
-                cols="50"
-                placeholder="Ask question..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-            />
+                            {chat.title}
 
-            <br /><br />
+                        </div>
+                    ))
+                }
 
-            <button onClick={sendMessage}>
-                Send
-            </button>
+            </div>
 
-            <hr />
 
-            {/* AI RESPONSE */}
+            {/* =====================================
+                CHAT WINDOW SECTION
+            ===================================== */}
 
-            <h3>AI Response:</h3>
+            <div
+                style={{
+                    width: "75%",
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "column"
+                }}
+            >
 
-            <p>{response}</p>
+                <h2>AI Document Chat</h2>
+
+
+                {/* =====================================
+                    MESSAGE DISPLAY AREA
+                ===================================== */}
+
+                <div
+                    style={{
+                        flex: 1,
+                        overflowY: "auto",
+                        border: "1px solid #ccc",
+                        padding: "10px",
+                        marginBottom: "15px"
+                    }}
+                >
+
+                    {/* DISPLAY ALL CHAT MESSAGES */}
+
+                    {
+                        messages.map((msg, index) => (
+
+                            <div
+                                key={index}
+
+                                style={{
+                                    marginBottom: "15px",
+                                    padding: "10px",
+                                    borderRadius: "5px",
+                                    backgroundColor:
+                                        msg.role === "user"
+                                            ? "#f1f1f1"
+                                            : "#dbeafe"
+                                }}
+                            >
+
+                                {/* Message role */}
+
+                                <b>
+                                    {
+                                        msg.role === "user"
+                                            ? "You"
+                                            : "AI"
+                                    }
+                                    :
+                                </b>
+
+                                {/* Message content */}
+
+                                <p>{msg.content}</p>
+
+                            </div>
+                        ))
+                    }
+
+                </div>
+
+
+                {/* =====================================
+                    DOCUMENT UPLOAD SECTION
+                ===================================== */}
+
+                <div
+                    style={{
+                        marginBottom: "15px"
+                    }}
+                >
+
+                    <input
+                        type="file"
+
+                        onChange={(e) =>
+                            setFile(e.target.files[0])
+                        }
+                    />
+
+                    <button
+                        onClick={uploadDocument}
+
+                        style={{
+                            marginLeft: "10px"
+                        }}
+                    >
+                        Upload Document
+                    </button>
+
+                </div>
+
+
+                {/* =====================================
+                    INPUT SECTION
+                ===================================== */}
+
+                <div>
+
+                    {/* USER INPUT BOX */}
+
+                    <textarea
+                        rows="3"
+
+                        style={{
+                            width: "100%",
+                            padding: "10px"
+                        }}
+
+                        placeholder="Ask something..."
+
+                        value={message}
+
+                        onChange={(e) =>
+                            setMessage(e.target.value)
+                        }
+                    />
+
+                    <br /><br />
+
+                    {/* SEND BUTTON */}
+
+                    <button
+                        onClick={sendMessage}
+
+                        style={{
+                            padding: "10px 20px"
+                        }}
+                    >
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
     );
 }
 
 export default ChatPage;
+

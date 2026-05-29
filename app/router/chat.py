@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Chat
 from app.oauth2 import get_current_user
 from app.schema import ChatCreate
+from app.models import Message
 
 router = APIRouter(
     prefix="/chat",
@@ -27,3 +28,42 @@ def create_chat(
         "chat_id": new_chat.id,
         "title": new_chat.title
     }
+  
+  
+# getting all chat of a current user  
+@router.get("/")
+def get_user_chats(
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    chats = db.query(Chat).filter(
+        Chat.owner_id == current_user.id
+    ).order_by(Chat.created_at.desc()).all()
+
+    return chats
+
+
+# geting all messages
+@router.get("/{chat_id}/messages")
+def get_chat_messages(
+    chat_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    print(current_user.id)
+    chat = db.query(Chat).filter(
+        Chat.id == chat_id,
+        Chat.owner_id == current_user.id
+    ).first()
+
+    if not chat:
+        raise HTTPException(
+            status_code=404,
+            detail="Chat not found"
+        )
+
+    messages = db.query(Message).filter(
+        Message.chat_id == chat_id
+    ).order_by(Message.created_at.asc()).all()
+
+    return messages
