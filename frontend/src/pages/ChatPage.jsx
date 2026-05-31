@@ -131,7 +131,51 @@ function ChatPage() {
             alert("Chat Creation Failed");
         }
     };
+    // =========================================
+// DELETE CHAT
+// =========================================
 
+const deleteChat = async (id) => {
+
+    const confirmDelete = window.confirm(
+        "Are you sure you want to delete this chat?"
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    try {
+
+        await API.delete(`/chat/${id}`);
+
+        // Remove deleted chat from sidebar
+
+        setChats((prev) =>
+            prev.filter(
+                (chat) =>
+                    (chat.id || chat.chat_id) !== id
+            )
+        );
+
+        // If current chat was deleted
+
+        if (chatId === id) {
+
+            setChatId(null);
+
+            setMessages([]);
+        }
+
+        alert("Chat Deleted");
+
+    } catch (error) {
+
+        console.log(error.response?.data);
+
+        alert("Delete Failed");
+    }
+};
 
     // =========================================
     // UPLOAD DOCUMENT
@@ -322,34 +366,53 @@ function ChatPage() {
                 {/* DISPLAY ALL CHATS */}
 
                 {
-                    chats.map((chat) => (
+    chats.map((chat) => (
 
-                        <div
-                            key={chat.id || chat.chat_id}
+        <div
+            key={chat.id || chat.chat_id}
 
-                            // Load messages on click
-                            onClick={() =>
-                                loadMessages(
-                                    chat.id || chat.chat_id
-                                )
-                            }
+            style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px",
+                borderBottom: "1px solid #ccc",
+                marginBottom: "5px"
+            }}
+        >
 
-                            style={{
-                                padding: "10px",
-                                cursor: "pointer",
-                                borderBottom:
-                                    "1px solid #ccc",
-                                marginBottom: "5px"
-                            }}
-                        >
+            <span
+                style={{
+                    cursor: "pointer",
+                    flex: 1
+                }}
 
-                            {/* Chat title */}
-
-                            {chat.title}
-
-                        </div>
-                    ))
+                onClick={() =>
+                    loadMessages(
+                        chat.id || chat.chat_id
+                    )
                 }
+            >
+                {chat.title}
+            </span>
+
+            <button
+                onClick={() =>
+                    deleteChat(
+                        chat.id || chat.chat_id
+                    )
+                }
+
+                style={{
+                    cursor: "pointer"
+                }}
+            >
+                🗑
+            </button>
+
+        </div>
+    ))
+}
 
             </div>
 

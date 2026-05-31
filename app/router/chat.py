@@ -43,7 +43,7 @@ def get_user_chats(
     return chats
 
 
-# geting all messages
+# geting all messages for persistent chatting
 @router.get("/{chat_id}/messages")
 def get_chat_messages(
     chat_id: int,
@@ -67,3 +67,40 @@ def get_chat_messages(
     ).order_by(Message.created_at.asc()).all()
 
     return messages
+
+
+@router.delete("/{chat_id}")
+def delete_chat(
+    chat_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    # Find chat belonging to current user
+
+    chat = db.query(Chat).filter(
+        Chat.id == chat_id,
+        Chat.owner_id == current_user.id
+    ).first()
+
+    if not chat:
+        raise HTTPException(
+            status_code=404,
+            detail="Chat not found"
+        )
+
+    # Delete all messages of chat first
+
+    db.query(Message).filter(
+        Message.chat_id == chat_id
+    ).delete()
+
+    # Delete chat
+
+    db.delete(chat)
+
+    db.commit()
+
+    return {
+        "message": "Chat deleted successfully"
+    }
