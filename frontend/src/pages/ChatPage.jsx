@@ -25,6 +25,25 @@ function ChatPage() {
     // Store selected file
     const [file, setFile] = useState(null);
 
+    const [documents, setDocuments] = useState([]);
+
+    // load docs
+    const loadDocuments = async () => {
+
+    try {
+
+        const response = await API.get(
+            "/documents/"
+        );
+
+        setDocuments(response.data);
+
+    } catch (error) {
+
+        console.log(error.response?.data);
+    }
+};
+
 
     // =========================================
     // LOAD ALL CHATS
@@ -317,8 +336,33 @@ const deleteChat = async (id) => {
     useEffect(() => {
 
         loadChats();
+        loadDocuments();
 
     }, []);
+    // DELETE DOCS
+    const deleteDocument = async (id) => {
+
+    try {
+
+        await API.delete(
+            `/documents/delete-docs/${id}`
+        );
+
+        setDocuments((prev) =>
+            prev.filter(
+                (doc) => doc.id !== id
+            )
+        );
+
+        alert("Document Deleted");
+
+    } catch (error) {
+
+        console.log(error.response?.data);
+
+        alert("Delete Failed");
+    }
+};
 
 
     // =========================================
@@ -365,7 +409,7 @@ const deleteChat = async (id) => {
 
                 {/* DISPLAY ALL CHATS */}
 
-                {
+{
     chats.map((chat) => (
 
         <div
@@ -402,10 +446,41 @@ const deleteChat = async (id) => {
                         chat.id || chat.chat_id
                     )
                 }
+            >
+                🗑
+            </button>
 
-                style={{
-                    cursor: "pointer"
-                }}
+        </div>
+    ))
+}
+
+<hr />
+
+<h3>Documents</h3>
+
+{
+    documents.map((doc) => (
+
+        <div
+            key={doc.id}
+
+            style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px",
+                borderBottom: "1px solid #eee"
+            }}
+        >
+
+            <span>
+                {doc.filename}
+            </span>
+
+            <button
+                onClick={() =>
+                    deleteDocument(doc.id)
+                }
             >
                 🗑
             </button>

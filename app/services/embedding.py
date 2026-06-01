@@ -1,9 +1,7 @@
 # embeddings.py
-from sentence_transformers import SentenceTransformer
+from app.services.ai_models import embedding_model
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
 def generate_embedding(text: str):
 
-    embedding = model.encode(text)
-
+    embedding = embedding_model.encode(text)
     return embedding.tolist()

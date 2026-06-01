@@ -7,9 +7,10 @@ from app.database import get_db
 from app.oauth2 import get_current_user
 from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
+from app.models import Document
 
 # for embedding
-from app.services.embedding import model,generate_embedding
+from app.services.embedding import generate_embedding
 
 
 router = APIRouter(
@@ -136,3 +137,15 @@ def delete_document(
     db.commit()
 
     return {"message": "Document deleted successfully"}
+
+@router.get("/")
+def get_documents(
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    documents = db.query(Document).filter(
+        Document.owner_id == current_user.id
+    ).all()
+
+    return documents
