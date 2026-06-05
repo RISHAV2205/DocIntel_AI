@@ -1,0 +1,49 @@
+Government of Odisha
+eChallan
+Cyber Treasury
+Name of the Depositor
+1.
+2.
+3.
+5.
+Depositor's Address
+District
+Total Transaction Amount (In Rs.)
+Amount (In words)
+RISHAV PODDAR
+RTO KEONJHAR  OD KENDUJHAR TOWN  KENDUJHAR ODISHA 758001
+KENDUJHAR TOWN  KENDUJHAR ODISHA
+Rs. 200/- ( echallan- Rs. 200/- + agency- Rs. 0/- )
+Bank Transaction ID
+Bank Transaction Date & Time
+Bank Transaction Status
+6034752042155
+26/05/2026 12:37:10 PM
+Succesful: Confirmation Received from Bank as Success
+Head of Account
+Description
+Amount
+Head Of Account
+Challan Number & Date
+DL Fee
+0041-00-800-0097-01026-000
+Rs. 200/-
+Not Generated
+Rs. 200/-
+Total Amount
+Payment Remarks
+Department specific information (if any)
+ Department Reference ID
+ ODZ2605269285685
+Name of the Bank
+Mode of Transaction
+SBI ePay Payment Gateway
+UPI
+6.
+Bank Details
+Two Hundred Only
+4.
+e Challan Reference Id
+3CA8980FA4
+Generated on : 26/05/2026 12:36:47 PM
+* This is a computer generated challan and doesn't require any signature or stamp.

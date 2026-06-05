@@ -1,9 +1,10 @@
 from .database import Base
-from sqlalchemy import Column,Integer,String,Boolean,ForeignKey,DateTime,Text,JSON
+from sqlalchemy import Column,Integer,String,Boolean,ForeignKey,DateTime,Text
 from sqlalchemy.sql.expression import null,text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from pgvector.sqlalchemy import Vector
 
 class post(Base):
     __tablename__="posts"
@@ -56,7 +57,7 @@ class DocumentChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     chunk_text = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    embedding = Column(JSON, nullable=True)
+    embedding = Column(Vector(384), nullable=True)
 
     # Relationship
     document = relationship("Document", back_populates="chunks")

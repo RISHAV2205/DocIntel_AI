@@ -40,9 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # my_post=[{"title":"hello","content":"vjfjv","id":1}]
-
 # def find_post(id):  #helpful in retrieving particular post
 #     for p in my_post:
 #         if p['id']==id:
@@ -52,8 +50,6 @@ app.add_middleware(
 #     for i,p in enumerate(my_post):
 #         if p["id"]==id:
 #             return i
-
-
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
