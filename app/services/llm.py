@@ -145,6 +145,9 @@ def generate_answer_stream(prompt: str):
 
         try:
             data = json.loads(data_str)
+            if not data.get("choices"):
+                continue
+
             token = data["choices"][0]["delta"].get("content", "")
             if token:
                 yield token

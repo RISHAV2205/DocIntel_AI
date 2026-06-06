@@ -71,28 +71,28 @@ def send_message(
     # testing
     print("CURRENT USER:", current_user.id)
     print("ROWS FOUND:", len(rows))
-    print(rows)
+    # print(rows)
     
-    # preparing embeding
-    texts = []
-    embeddings = []
-    for row in rows:
-        texts.append(row[0])
-        embeddings.append(row[1])
-    embeddings = np.array(embeddings)
     
-    #vector similarity
-    similarities = cosine_similarity(
-    [query_embedding],
-    embeddings)[0]
+    rows = db.execute(
+    text("""
+        SELECT dc.chunk_text
+        FROM document_chunks dc
+        JOIN documents d
+        ON dc.document_id = d.id
+        WHERE d.owner_id = :user_id
+        ORDER BY dc.embedding <=> CAST(:query_embedding AS vector)
+        LIMIT 10
+    """),
+    {
+        "user_id": current_user.id,
+        "query_embedding": str(query_embedding)
+    }
+).fetchall()
     
-    #initial top 10
-    k = 10
-    top_indices = similarities.argsort()[-k:][::-1]
-    retrieved_chunks = [
-        texts[i]
-        for i in top_indices
-    ]
+    # print(rows)
+    
+    retrieved_chunks = [row[0] for row in rows]
 
     #rerank
     final_chunks = rerank(
@@ -196,13 +196,25 @@ def send_message_stream(
             detail="No document chunks found. Please upload a document first."
         )
 
-    # Step 5 — similarity search (your existing logic)
-    texts = [row[0] for row in rows]
-    embeddings = np.array([row[1] for row in rows])
+    rows = db.execute(
+    text("""
+        SELECT dc.chunk_text
+        FROM document_chunks dc
+        JOIN documents d
+        ON dc.document_id = d.id
+        WHERE d.owner_id = :user_id
+        ORDER BY dc.embedding <=> CAST(:query_embedding AS vector)
+        LIMIT 10
+    """),
+    {
+        "user_id": current_user.id,
+        "query_embedding": str(query_embedding)
+    }
+    ).fetchall()
 
-    similarities = cosine_similarity([query_embedding], embeddings)[0]
-    top_indices = similarities.argsort()[-10:][::-1]
-    retrieved_chunks = [texts[i] for i in top_indices]
+    # print(rows)
+
+    retrieved_chunks = [row[0] for row in rows]
 
     # Step 6 — rerank
     final_chunks = rerank(request.query, retrieved_chunks, top_k=3)
