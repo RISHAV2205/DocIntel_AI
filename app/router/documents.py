@@ -96,8 +96,16 @@ def upload_document(
         db.add(chunk)
     db.commit()
     
-    
-    
+    try:
+        new_document.status = "chunking done"
+        db.commit()
+        db.refresh(new_document)
+    except Exception as e:
+        new_document.status = "failed"
+        db.commit()
+        raise HTTPException(status_code=500, detail=str(e))
+        
+
     # response 
     return {
         "id": new_document.id,

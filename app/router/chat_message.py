@@ -15,6 +15,8 @@ from app.services.llm import generate_answer, generate_answer_stream
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+from app.services.redis_client import redis_client
+
 router = APIRouter(
     prefix="/chat",
     tags=["Chat Messages"]
@@ -47,6 +49,27 @@ def send_message(
     db.add(user_message)
     db.commit()
     
+    # seeing cache
+    cache_key = f"user:{current_user.id}:query:{request.query}"
+    cached_answer = redis_client.get(cache_key)
+
+    if cached_answer:
+
+        assistant_message = Message(
+            chat_id=chat_id,
+            role="assistant",
+            content=cached_answer
+        )
+
+        db.add(assistant_message)
+        db.commit()
+
+        return {
+            "chat_id": chat_id,
+            "response": cached_answer,
+            "source": "redis_cache"
+        }
+        
     #creating query embedding
     query_embedding = generate_embedding(request.query)
     
@@ -130,6 +153,10 @@ def send_message(
     
     #calling llm
     answer = generate_answer(final_prompt)
+    
+    # caching our response
+    redis_client.set(
+    cache_key,answer,ex=3600)
     
     #saving ai response
     assistant_message = Message(
