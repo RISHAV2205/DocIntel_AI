@@ -17,7 +17,6 @@ session_local=sessionmaker(autocommit=False,autoflush=False,bind=engine)
 #  Create the base class for ORM models
 Base=declarative_base()
 
-
 # cleanup if error occur
 def get_db():  #dependency on session
     db=session_local()

@@ -7,6 +7,7 @@ from app.database import get_db
 from app.oauth2 import get_current_user
 from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
+from app.services.document_task import process_document_task
 from app.models import Document
 
 # for embedding
@@ -26,7 +27,7 @@ def upload_document(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    # validating path of a file
+    # validate file type
     allowed_extensions = [".pdf", ".txt", ".docx"]
     file_ext = os.path.splitext(file.filename)[1]
 
@@ -36,10 +37,8 @@ def upload_document(
             detail="Unsupported file type"
         )
 
-    # Created unique file path
+    # save file to disk
     file_path = f"{UPLOAD_DIR}/{current_user.id}_{file.filename}"
-
-    # Save file to disk
     try:
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
@@ -48,70 +47,51 @@ def upload_document(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to save file"
         )
-    
-    
 
-    # Creating DB records with metadata
+    # create DB record with status queued
     new_document = models.Document(
         filename=file.filename,
         file_path=file_path,
         owner_id=current_user.id,
-        status="uploaded"
+        status="queued"           # ✅ queued instead of uploaded
     )
-
     db.add(new_document)
     db.commit()
     db.refresh(new_document)
-    
-    
-    try:
-        text_path = extract_text(file_path)
 
-        new_document.extracted_text_path = text_path
-        new_document.status = "processed"
+    # fire background task — returns immediately
+    process_document_task.delay(new_document.id)   # ✅ non-blocking
 
-        db.commit()
-        db.refresh(new_document)
-
-    except Exception as e:
-        new_document.status = "failed"
-        db.commit()
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
-    # pipeline for text cleaning and chunking
-    chunks=process_extracted_text(text_path)
-    # print(chunks)
-    
-    # storing chunks in db
-    for i, text in enumerate(chunks):
-        vector = generate_embedding(text)
-        chunk = models.DocumentChunk(
-            document_id=new_document.id,
-            chunk_index=i,
-            chunk_text=text,
-            embedding=vector
-            )
-        db.add(chunk)
-    db.commit()
-    
-    try:
-        new_document.status = "chunking done"
-        db.commit()
-        db.refresh(new_document)
-    except Exception as e:
-        new_document.status = "failed"
-        db.commit()
-        raise HTTPException(status_code=500, detail=str(e))
-        
-
-    # response 
+    # return instantly — no waiting for processing
     return {
         "id": new_document.id,
         "filename": new_document.filename,
-        "status": new_document.status
+        "status": new_document.status,   # returns "queued"
+        "message": "Document uploaded. Processing in background."
     }
+
+
+# status check endpoint — user polls this to see progress
+@router.get("/{document_id}/status")
+def get_document_status(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    document = db.query(Document).filter(
+        Document.id == document_id,
+        Document.owner_id == current_user.id
+    ).first()
+
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    return {
+        "id": document.id,
+        "filename": document.filename,
+        "status": document.status    # queued | processing | ready | failed
+    }
+
     
     
 # deleting document
