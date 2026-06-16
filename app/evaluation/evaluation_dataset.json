@@ -1,0 +1,102 @@
+[
+{
+"question": "Who is the ex-officio Chairman of the Rajya Sabha?",
+"expected_chunk_keyword": "Vice President of India",
+"expected_answer": "The Vice President of India is the ex-officio Chairman of the Rajya Sabha."
+},
+{
+"question": "What is the term of office of the Vice President?",
+"expected_chunk_keyword": "term of five years",
+"expected_answer": "The Vice President holds office for a term of five years."
+},
+{
+"question": "What political cause contributed to the Revolt of 1857?",
+"expected_chunk_keyword": "Doctrine of Lapse",
+"expected_answer": "The British policy of annexation, including the Doctrine of Lapse, contributed to the Revolt of 1857."
+},
+{
+"question": "What military issue angered Indian soldiers before the Revolt of 1857?",
+"expected_chunk_keyword": "greased cartridges",
+"expected_answer": "The introduction of greased cartridges hurt religious sentiments and angered Indian soldiers."
+},
+{
+"question": "What is a disaster?",
+"expected_chunk_keyword": "sudden and severe event",
+"expected_answer": "A disaster is a sudden and severe event that causes great damage to life, property, and the environment."
+},
+{
+"question": "Give one example of a man-made disaster.",
+"expected_chunk_keyword": "Industrial accidents",
+"expected_answer": "Industrial accidents are examples of man-made disasters."
+},
+{
+"question": "What is the primary function of the money market?",
+"expected_chunk_keyword": "short-term funds",
+"expected_answer": "The money market provides short-term funds to meet working capital needs."
+},
+{
+"question": "Name one capital market instrument.",
+"expected_chunk_keyword": "Shares",
+"expected_answer": "Shares are instruments of the capital market."
+},
+{
+"question": "What protective function does SEBI perform?",
+"expected_chunk_keyword": "Protects investors",
+"expected_answer": "SEBI protects investors from unfair trade practices and frauds."
+},
+{
+"question": "What happened to the East India Company after the Revolt of 1857?",
+"expected_chunk_keyword": "Company was abolished",
+"expected_answer": "The British East India Company was abolished after the Revolt of 1857."
+},
+{
+"question": "What policy did the British use to weaken Indian unity after 1857?",
+"expected_chunk_keyword": "Divide and Rule",
+"expected_answer": "The British adopted the policy of Divide and Rule."
+},
+{
+"question": "What rate of simple interest caused an amount to increase by 60 percent in 6 years?",
+"expected_chunk_keyword": "10% p.a",
+"expected_answer": "The rate of simple interest was 10% per annum."
+},
+{
+"question": "What compound interest was earned on Rs. 12000 at 10 percent for 3 years?",
+"expected_chunk_keyword": "3972",
+"expected_answer": "The compound interest earned was Rs. 3972."
+},
+{
+"question": "What principal gives an amount of Rs. 12100 at 10 percent compound interest for 2 years?",
+"expected_chunk_keyword": "10000",
+"expected_answer": "The principal amount was Rs. 10000."
+},
+{
+"question": "What rate of interest corresponds to a difference of Rs. 96 between CI and SI on Rs. 15000?",
+"expected_chunk_keyword": "8%",
+"expected_answer": "The rate of interest was 8%."
+},
+{
+"question": "How many years are required for a sum to become six times under simple interest at 40 percent?",
+"expected_chunk_keyword": "12.5 years",
+"expected_answer": "The required time is 12.5 years."
+},
+{
+"question": "What is the effective annual interest rate when 10 percent is compounded half-yearly?",
+"expected_chunk_keyword": "10.25%",
+"expected_answer": "The effective annual interest rate is 10.25%."
+},
+{
+"question": "What was the average interest on loans per year?",
+"expected_chunk_keyword": "36.66 lakh",
+"expected_answer": "The average interest per year was Rs. 36.66 lakh."
+},
+{
+"question": "What was the total bonus as a percentage of total salary?",
+"expected_chunk_keyword": "1%",
+"expected_answer": "The total bonus was approximately 1% of the total salary."
+},
+{
+"question": "What is the opposite of the word defile?",
+"expected_chunk_keyword": "Purify",
+"expected_answer": "The opposite of defile is purify."
+}
+]

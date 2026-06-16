@@ -11,6 +11,7 @@ from app.schema import MessageRequest
 from app.services.embedding import generate_embedding
 from app.services.cross_encoder import rerank
 from app.services.llm import generate_answer, generate_answer_stream  
+from app.services.retrieval_service import retrieve_chunks
 
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -71,7 +72,7 @@ def send_message(
         }
         
     #creating query embedding
-    query_embedding = generate_embedding(request.query)
+    # query_embedding = generate_embedding(request.query)
     
     #retrieing chunks
     rows = db.execute(
@@ -97,32 +98,33 @@ def send_message(
     # print(rows)
     
     
-    rows = db.execute(
-    text("""
-        SELECT dc.chunk_text
-        FROM document_chunks dc
-        JOIN documents d
-        ON dc.document_id = d.id
-        WHERE d.owner_id = :user_id
-        ORDER BY dc.embedding <=> CAST(:query_embedding AS vector)
-        LIMIT 10
-    """),
-    {
-        "user_id": current_user.id,
-        "query_embedding": str(query_embedding)
-    }
-).fetchall()
+#     rows = db.execute(
+#     text("""
+#         SELECT dc.chunk_text
+#         FROM document_chunks dc
+#         JOIN documents d
+#         ON dc.document_id = d.id
+#         WHERE d.owner_id = :user_id
+#         ORDER BY dc.embedding <=> CAST(:query_embedding AS vector)
+#         LIMIT 10
+#     """),
+#     {
+#         "user_id": current_user.id,
+#         "query_embedding": str(query_embedding)
+#     }
+# ).fetchall()
     
     # print(rows)
     
-    retrieved_chunks = [row[0] for row in rows]
+    # retrieved_chunks = [row[0] for row in rows]
 
-    #rerank
-    final_chunks = rerank(
-    request.query,
-    retrieved_chunks,
-    top_k=3)
+    # #rerank
+    # final_chunks = rerank(
+    # request.query,
+    # retrieved_chunks,
+    # top_k=3)
     
+    final_chunks=retrieve_chunks(request.query,db,current_user)
     #loading chat history
     previous_messages = db.query(Message).filter(
     Message.chat_id == chat_id).order_by(Message.created_at.asc()).all()
@@ -136,7 +138,7 @@ def send_message(
     context = "\n\n".join(final_chunks)
 
     final_prompt = f"""
-    You are a helpful AI assistant. give short and straightforward answer for each que
+    You are a helpful AI assistant. give short and straightforward answer for each query donot hallucinate short as much as possible 
 
     Conversation History:
     {history}
@@ -252,13 +254,13 @@ def send_message_stream(
     ).order_by(Message.created_at.asc()).all()
 
     history = ""
-    for msg in previous_messages[-6:]:
+    for msg in previous_messages[-2:]:
         history += f"{msg.role}: {msg.content}\n"
 
     # Step 8 — build prompt (your existing prompt)
     context = "\n\n".join(final_chunks)
     final_prompt = f"""
-    You are a helpful AI assistant. give short and straightforward answer for each question.
+    You are a helpful AI assistant. give short and straightforward answer for each question and strictly from the context donot hallucinate short answer.
 
     Conversation History:
     {history}
