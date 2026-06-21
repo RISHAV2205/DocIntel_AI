@@ -1,6 +1,5 @@
 from app.services.ai_models import reranker_model
 
-
 def rerank(query, chunks, top_k=5):
 
     pairs = []
@@ -19,5 +18,4 @@ def rerank(query, chunks, top_k=5):
         chunk
         for chunk, score in scored_chunks[:top_k]
     ]
-
     return top_chunks

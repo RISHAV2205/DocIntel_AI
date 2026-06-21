@@ -124,7 +124,7 @@ def send_message(
     # retrieved_chunks,
     # top_k=3)
     
-    final_chunks=retrieve_chunks(request.query,db,current_user)
+    final_chunks=retrieve_chunks(request.query,db,current_user.id)
     #loading chat history
     previous_messages = db.query(Message).filter(
     Message.chat_id == chat_id).order_by(Message.created_at.asc()).all()
@@ -138,7 +138,7 @@ def send_message(
     context = "\n\n".join(final_chunks)
 
     final_prompt = f"""
-    You are a helpful AI assistant. give short and straightforward answer for each query donot hallucinate short as much as possible 
+    You are a helpful AI assistant. give short and straightforward answer for each query donot hallucinate..
 
     Conversation History:
     {history}
@@ -150,7 +150,7 @@ def send_message(
     {request.query}
 
     Answer naturally and clearly.
-    donot hallucinate and if context not found say directly that i dont know much about it
+    donot hallucinate and if context not found say directly that i dont know much about it..and give proper answer
     """
     
     #calling llm

@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from sqlalchemy import text
 import json
-from app.services.retrieval_service import similarity_search
+from app.services.retrieval_service import retrieve_chunks
 from app.services.llm import generate_answer
 from app.services.cross_encoder import rerank
 
@@ -40,7 +40,7 @@ def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = De
     if len(rows) == 0:
         return {"message": "No documents found"}
 
-    top_chunks,top_scores=similarity_search(rows,query_embedding)
+    top_chunks,top_scores=retrieve_chunks(rows,query_embedding)
     reranked_chunks=rerank(request.query,top_chunks)
     ans= generate_answer(request.query, reranked_chunks)
     

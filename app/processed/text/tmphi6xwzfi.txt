@@ -1,0 +1,917 @@
+Received 18 January 2025, accepted 18 March 2025, date of publication 25 March 2025, date of current version 4 April 2025.
+Digital Object Identifier 10.1109/ACCESS.2025.3553854
+AI-Driven Smart Shopping Carts With Real-Time
+Tracking and Inventory Forecasting for
+Enhanced Retail Efficiency
+MUHAMMAD IMRAN ZULFIQAR
+1, AYESHA KHALID
+2, ABUBAKR SIDDIG
+3,
+MUHAMMAD JUNAID NAWAZ4, AND SALIM SAAY
+5
+1School of Computer Science and Engineering, Nanjing University of Science and Technology, Nanjing 210094, China
+2Department of Computer Science and Information Technology, University of Jhang, Jhang 35200, Pakistan
+3School of Computer Science, Technological University Dublin, Dublin 7, D07 EWV4 Ireland
+4Department of Physical and Numerical Sciences, Qurtuba University of Science and Information Technology, Dera Ismail Khan 29111, Pakistan
+5Department of Computer Science and Information Systems, University of Limerick, Limerick, V94 T9PX Ireland
+Corresponding author: Abubakr Siddig (abubakr.siddig@tudublin.ie)
+ABSTRACT
+This paper presents an AI-driven smart shopping cart system designed to enhance retail
+efficiency and customer experience through real-time data analytics and machine learning. Traditional
+shopping carts lack capabilities for adaptive tracking, inventory management, and personalized customer
+interaction. Our system addresses these gaps with a multi-layered architecture that integrates person-
+specific tracking, reinforcement learning (RL) for navigation, and Long Short-Term Memory (LSTM)
+networks for demand forecasting, alongside seamless Point-of-Sale (POS) integration for automated billing.
+The architecture comprises real-time data capture, edge computing for low-latency decisions, and cloud
+processing for customer profiling and inventory management. Experimental results demonstrate notable
+improvements in tracking accuracy, navigation efficiency, inventory forecasting, and customer satisfaction,
+highlighting AI’s transformative potential in retail.
+INDEX TERMS
+Artificial intelligence, machine learning, smart shopping cart, retail, inventory
+management, personalized shopping, autonomous systems.
+I. INTRODUCTION
+The retail industry is undergoing a significant transformation,
+propelled by advanced technologies, including Artificial
+Intelligence (AI), Machine Learning (ML), and edge com-
+puting [1], [2], [3], [4]. These technologies are instrumental
+in addressing essential retail challenges, such as enhancing
+customer experience, improving inventory accuracy, and
+automating checkout processes. An emerging innovation
+within this ecosystem is the AI-powered smart shopping cart,
+a system poised to streamline the entire in-store shopping
+process—from product selection to automated billing—
+thereby providing retailers and customers with an efficient,
+personalized, and adaptive shopping experience [5].
+The associate editor coordinating the review of this manuscript and
+approving it for publication was Junho Hong
+.
+Traditional shopping carts, limited in functionality, do not
+meet the increasing demands of modern retail environments,
+lacking capabilities for real-time navigation optimization,
+personalized product recommendations, and streamlined
+checkout [6], [7], [8]. Manual inventory management often
+fails to match fluctuating customer demand, resulting
+in frequent stock shortages or excessive stockpiles. The
+proposed AI-driven smart shopping cart overcomes these
+limitations by integrating advanced AI algorithms, real-
+time data processing, and RL techniques, creating a fully
+autonomous, adaptive solution to modern retail challenges.
+This research is based on the following question:
+• How can an AI-driven smart shopping cart system
+be developed to address the limitations of traditional
+carts, enabling real-time tracking, optimized navigation,
+personalized product recommendations, and accurate
+inventory forecasting to enhance retail efficiency?
+55576
+ 2025 The Authors. This work is licensed under a Creative Commons Attribution 4.0 License.
+For more information, see https://creativecommons.org/licenses/by/4.0/
+VOLUME 13, 2025
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+In this study, we aim to introduce a novel AI-powered smart
+shopping cart system engineered to optimize customer expe-
+rience and operational efficiency. This system uses a multi-
+layered architecture: real-time data collection is achieved
+through hardware components, low-latency decision-making
+through edge computing, and intensive computational tasks
+such as demand forecasting and customer profiling are
+handled via cloud infrastructure. Person-specific tracking is
+achieved through Red, Green, Blue, and Depth (RGB-D)
+cameras, ultrasonic sensors, and Kalman filters integrated
+with re-identification (Re-ID) models, ensuring uninterrupted
+and accurate customer tracking. RL algorithms dynamically
+adjust the cart’s navigation path based on store layout and
+real-time obstacle detection, ensuring efficient movement
+throughout the store.
+Moreover, LSTM networks are utilized to forecast product
+demand and optimize inventory levels, thus minimizing both
+stockouts and overstock situations and reducing operational
+costs. Our system seamlessly integrates with POS sys-
+tems, automating billing and enabling contactless payments
+for improved customer convenience. Collectively, these
+innovations contribute to an AI-driven retail ecosystem
+that significantly improves operational efficiency, inventory
+management, and customer satisfaction.
+The main contributions of this paper are as follows:
+• We propose an AI-powered smart shopping cart system
+that integrates real-time data acquisition, edge comput-
+ing, and cloud processing, thereby greatly enhancing
+shopping experience and operational efficiency in retail
+environments.
+• We develop a precise person-specific tracking algorithm
+leveraging RGB-D cameras, Kalman filters, and Re-ID
+models based on cosine similarity, ensuring robust, real-
+time tracking of customers throughout their in-store
+journey.
+• The system implements RL-based dynamic navigation
+optimization, enabling adaptive pathfinding that adjusts
+to store layouts and obstacles in real time, improving
+navigation efficiency.
+• We apply LSTM networks for accurate demand forecast-
+ing, facilitating optimal inventory management while
+minimizing stockouts and overstock, thus significantly
+reducing associated operational costs.
+• Our system integrates seamlessly with POS systems,
+automating billing, supporting real-time product scan-
+ning, and enabling contactless payments to streamline
+checkout processes and enhance customer convenience.
+• An extensive experimental evaluation is conducted
+in both simulated and real-world retail environments,
+demonstrating marked improvements in customer satis-
+faction, operational efficiency, and inventory accuracy.
+The key notations used throughout this manuscript are
+summarized in Table 1.
+The paper is organized as follows: Section II reviews
+related work, Section III describes the system architecture,
+Section IV presents research method, Section V details
+TABLE 1. Symbols and notations used in this research.
+the experimental setup, Section VI presents the results,
+and Section VII concludes with key findings and future
+directions.
+II. BACKGROUND AND RELATED WORK
+The swift progress in AI and ML has significantly impacted
+the retail industry, introducing solutions that enhance
+operational efficiency, improve customer satisfaction, and
+streamline inventory management [9], [10]. AI is widely
+applied in decision-making systems, while ML models excel
+in predictive tasks, learning from both historical and real-
+time data. The integration of these technologies has enabled
+the development of sophisticated systems that automate
+various retail processes, such as customer interaction, product
+recommendation, and navigation [11]. Smart shopping carts
+equipped with AI and ML have, in particular, attracted
+attention for their potential to transform the traditional
+shopping experience.
+A. SMART SHOPPING CARTS
+Smart shopping carts are engineered to automate and improve
+different aspects of in-store shopping, featuring capabilities
+such as product scanning, navigation, and billing automation.
+Early implementations, like Amazon Dash Cart [12] and
+Caper’s Smart Cart [13], focused on checkout simplification
+by eliminating manual product scanning through RFID tech-
+nology, barcode scanners, and computer vision algorithms.
+However, these systems lacked advanced decision-making
+capabilities and personalized customer interactions achiev-
+able through sophisticated ML models and AI-powered
+systems [14].
+Recent studies have explored enhancements to smart
+shopping carts through more advanced AI and ML models.
+For example, AI-driven shopping systems have been devel-
+oped for real-time product recommendations, automated
+pathfinding, and predictive analytics for inventory manage-
+ment [15]. While these innovations mark progress, they are
+often limited to isolated functions such as automated billing
+or static navigation, without fully exploiting AI’s potential
+for adaptive, real-time decision-making in dynamic retail
+environments.
+Our proposed AI-powered smart shopping cart system
+advances these efforts by integrating RL algorithms for
+VOLUME 13, 2025
+55577
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+optimized in-store navigation and LSTM networks for
+forecasting-based inventory management. This integration
+enables the cart to autonomously adapt to changing store lay-
+outs, customer preferences, and product demand, delivering
+a personalized and efficient shopping experience.
+B. AI AND ML IN THE RETAIL SECTOR
+AI and ML applications in retail have shown substantial
+potential in optimizing both customer experiences and
+operational processes [16], [17]. AI is applied across
+various retail functions, such as customer behavior analysis,
+demand forecasting, and recommendation generation [18].
+ML techniques, especially deep learning and RL, play a
+crucial role in enabling these systems to continuously learn
+from extensive datasets and improve performance over time.
+Convolutional Neural Networks (CNNs), for instance, are
+widely used in recommendation systems to predict customer
+preferences based on historical purchasing patterns and real-
+time interactions [14].
+RL, in particular, has proven effective for path opti-
+mization, notably within autonomous robotic systems in
+warehouses and retail stores [19], [20]. By learning from
+the environment, RL models can continuously optimize
+navigation paths, reducing travel time and avoiding obstacles,
+thereby improving overall operational efficiency. Despite
+these advancements, the application of these techniques to
+smart shopping carts remains limited, with research often
+focusing on discrete aspects such as inventory management
+or customer interaction, rather than developing an integrated
+system.
+This work addresses this gap by presenting a unified
+AI-driven smart cart system that combines real-time data
+acquisition, autonomous navigation, and predictive inventory
+management. The system leverages AI for decision-making
+and automation while employing ML models to learn from
+customer interactions, dynamically optimizing the shopping
+process. By integrating RL for real-time navigation and
+LSTM networks for demand forecasting, our system adapts to
+both the physical environment and shifting market conditions,
+offering an end-to-end solution for retail automation.
+C. AUTONOMOUS SYSTEMS FOR CUSTOMER
+INTERACTION
+Autonomous systems, including robotic assistants and mobile
+service robots, are increasingly prevalent in retail and
+hospitality [21], [22]. These systems utilize AI for customer
+guidance, real-time assistance, and autonomous naviga-
+tion [23]. For example, Simbe Robotics’ Tally [24] leverages
+AI-driven computer vision and ML to autonomously audit
+store shelves, ensuring product availability. While similar
+technologies have been applied to autonomous shopping
+assistants, few integrate personalized customer interactions
+with effective in-store navigation and inventory management.
+Our smart shopping cart system enhances these autonomous
+capabilities by incorporating personalized recommendations
+with real-time customer tracking and interaction. Using
+person-specific tracking algorithms, the system reliably
+follows customers throughout the store, while RL dynam-
+ically optimizes navigation based on store layout and
+customer behavior. By merging AI-driven personalization
+with autonomous navigation, our system delivers an intuitive
+and seamless shopping experience, elevating customer
+satisfaction and operational efficiency.
+D. CHALLENGES IN AI-DRIVEN RETAIL SYSTEMS
+Despite advancements in AI and ML, challenges remain in
+deploying AI-driven retail systems. One primary challenge
+is integrating AI models with existing retail infrastructure,
+such as POS systems, inventory databases, and customer
+relationship management platforms [11]. Seamless com-
+munication among these systems is essential to achieve
+real-time synchronization of customer data, inventory levels,
+and product information.
+Data privacy and security are also critical, as AI-driven
+systems often collect and process substantial volumes of
+customer data [25]. Retailers must secure this data and ensure
+compliance with privacy regulations. Additionally, scalability
+poses a challenge, as AI systems must manage interactions
+with hundreds or thousands of customers concurrently
+without compromising performance.
+This study addresses these challenges by developing a
+smart shopping cart system that integrates with existing retail
+infrastructure while ensuring data privacy through encrypted
+communications and role-based access control. The system is
+also highly scalable, capable of supporting multiple carts and
+customers simultaneously without performance degradation.
+III. SYSTEM ARCHITECTURE
+The architecture consists of three primary layers—Hardware
+Layer, Data Processing Layer, and Application Layer—each
+fulfilling specific functions to ensure optimal performance
+and a seamless customer experience. An overview of these
+layers is illustrated in Figure 1.
+A. HARDWARE LAYER
+The Hardware Layer is responsible for capturing real-time
+data and enabling autonomous operations. It integrates
+several essential components, including RGB-D cameras that
+provide both visual and depth data to support person tracking
+and obstacle detection. Ultrasonic sensors enhance obstacle
+avoidance capabilities and help maintain safe distances from
+customers, while infrared sensors detect line patterns or
+predefined routes to aid in navigation. Product identification
+is automated through a barcode scanner or RFID reader,
+which simplifies item addition as products are placed in the
+cart. Motors and controllers manage the cart’s movement
+by adjusting speed and direction in response to sensor data.
+The onboard microcontroller (Raspberry Pi) processes these
+inputs and executes low-latency commands for real-time
+control, enabling smooth and responsive navigation.
+55578
+VOLUME 13, 2025
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+FIGURE 1. Overview of the AI-powered smart shopping cart.
+B. DATA PROCESSING LAYER
+The Data Processing Layer serves as the backbone of the
+system, executing AI models to drive decision-making. This
+layer is divided into edge and cloud processing components
+to handle both low-latency tasks and more computationally
+intensive operations.
+Edge processing, occurring directly on the cart’s onboard
+microcontroller, ensures minimal latency for critical tasks
+like cart movement and obstacle avoidance, which are
+essential for safe navigation. Person-specific tracking is
+achieved through lightweight object detection models,
+ensuring accurate customer tracking without overwhelming
+computational resources. Additionally, path optimization is
+facilitated by a RL model, enabling the cart to adapt to
+dynamic environments and adjust its route based on store
+layout and obstacles. For precise customer tracking, a Kalman
+filter is implemented. This filter tracks the customer’s
+position in real time with the following state update:
+ˆxt+1 = Axt + But + wt,
+(1)
+where xt is the current position, ut represents control input,
+A is the state transition matrix, B is the control matrix, and
+wt accounts for process noise. The Kalman gain is iteratively
+updated as follows:
+Kt = PtHT
+t (HtPtHT
+t + Rt)−1,
+(2)
+where Kt is the Kalman gain, Pt represents the error
+covariance, Ht is the observation matrix, and Rt denotes
+measurement noise. For enhanced tracking, person re-
+identification (Re-ID) employs cosine similarity to maintain
+focus on the designated customer:
+S(Fcust, Fref) =
+Fcust · Fref
+∥Fcust∥∥Fref∥,
+(3)
+where Fcust, representing the customer’s features, and Fref,
+a reference vector which may correspond to a previously
+recorded or benchmark feature set. The term Fcust · Fref
+represents the dot product of these two vectors, providing
+a measure of how closely aligned they are in direction.
+The quantities ∥Fcust∥and ∥Fref∥refer to the Euclidean
+norms (or magnitudes) of the customer and reference vectors,
+respectively, acting as scaling factors that normalize the
+vectors.
+Cloud processing supports computationally intensive
+tasks, such as customer profiling, inventory management, and
+data analytics. Customer profiling is conducted through deep
+learning models that analyze past purchases and shopping
+behavior, generating personalized product recommendations.
+Inventory management is driven by an LSTM network that
+forecasts demand to optimize stock levels. For demand
+forecasting, the LSTM network updates its hidden states as
+follows:
+ht = LSTM(xt, ht−1, ct−1),
+(4)
+where xt represents input data, ht is the hidden state, and
+ct−1 is the cell state. Inventory prediction is modeled with
+the formula:
+St+1 = St −Dt + Rt,
+(5)
+where St+1 is the forecasted stock level, St the current stock,
+Dt the predicted demand, and Rt the replenishment quantity.
+Mean Squared Error (MSE) is minimized to optimize the
+forecast:
+MSE = 1
+n
+n
+X
+i=1
+(Si −Spred,i)2,
+(6)
+where Si is the actual stock level and Spred,i the predicted
+value.
+C. APPLICATION LAYER
+The Application Layer provides interfaces for customers and
+administrators, allowing real-time interaction with the cart
+and the backend system. The customer interface, accessible
+via a mobile app or in-store display, offers features such as
+personalized product recommendations based on shopping
+data, shopping list integration that guides customers through
+the store, and automated billing with real-time item scanning
+for a seamless checkout experience. The administrator
+interface enables store staff to monitor stock levels through
+real-time updates and predictive analytics, observe sales
+trends for optimizing store layout and promotions, and track
+cart performance, including battery life and sensor status.
+VOLUME 13, 2025
+55579
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+IV. RESEARCH METHODS
+The proposed AI-powered smart shopping cart system
+is a comprehensive integration of hardware for real-time
+data collection, ML models for decision-making, cloud
+infrastructure for processing, and seamless POS system
+integration.
+A. REINFORCEMENT LEARNING FOR PATH OPTIMIZATION
+RL is used to optimize the cart’s navigation by dynamically
+adjusting paths based on obstacles and store layout. The
+Q-value is updated using the Bellman equation:
+Q(st, at) ←Q(st, at)
++ α
+
+rt + γ max
+a′ Q(st+1, a′) −Q(st, at)
+
+, (7)
+where Q(st, at) is the current Q-value, α is the learning rate,
+rt represents the reward, γ is the discount factor, and a′ is the
+action that maximizes the next state Q-value.
+B. DEEP LEARNING FOR CUSTOMER PERSONALIZATION
+Customer personalization is handled by a Convolutional
+Neural Network (CNN) model, which processes customer
+behavior data to generate tailored product recommendations.
+The CNN operates with convolutional layers that identify
+patterns in customer data, followed by max pooling and
+a fully connected layer to output recommendation scores.
+Algorithm 1 outlines the CNN structure for generating these
+recommendations.
+Algorithm 1 CNN for Customer Personalization
+1: Input: Customer data X
+2: Output: Product recommendations ˆY
+3: Initialize weights W and biases b
+4: for each customer i in X do
+5:
+Perform convolution: Z ←W ∗X[i] + b
+6:
+Apply activation (ReLU): A ←max(0, Z)
+7:
+Apply max pooling: P ←MaxPooling(A)
+8:
+Flatten and apply fully connected layer: ˆY ←σ(Wfc ·
+F + bfc)
+9: end for
+10: Return: ˆY
+C. PREDICTIVE ANALYTICS FOR INVENTORY
+MANAGEMENT
+Inventory management leverages an LSTM-based predictive
+model to forecast demand. This model processes historical
+sales data to update the cell and hidden states and predict
+future demand values, as shown in Algorithm 2.
+D. SYSTEM OPERATIONS AND SECURITY
+The smart cart system integrates with POS systems to
+enable real-time product scanning, automated billing, and
+contactless payment. Communication across the system
+utilizes MQTT for low-latency updates, HTTP/HTTPS for
+Algorithm 2 LSTM for Inventory Management
+1: Input: Historical sales data X
+2: Output: Forecasted demand ˆD
+3: Initialize LSTM parameters Wf , Wi, Wo, bf , bi, bo
+4: for each time step t do
+5:
+Update cell state and hidden state
+6: end for
+7: Return: Forecasted demand ˆD
+secure data transmission, and Wi-Fi/Bluetooth for peripheral
+connections. To protect customer data, AES-256 encryption
+and role-based access controls are implemented, ensuring
+compliance with data security standards.
+V. EXPERIMENTAL EVALUATION
+This section presents the experimental setup and performance
+evaluation of the proposed system. Two datasets are utilized
+to assess the system’s effectiveness in tracking, navigation,
+recommendation, and demand forecasting, with comparison
+against baseline algorithms across relevant metrics.
+A. EXPERIMENTAL SETUP
+The AI-powered smart shopping cart operates in a controlled
+retail setting with multiple sensors and computing devices.
+While these experiments provide valuable insights, future
+large-scale deployment in real retail stores will be necessary
+to assess system performance under varying real-world
+conditions. The setup included the following components:
+• RGB-D Cameras: Capture visual and depth informa-
+tion for customer tracking and obstacle detection.
+• Ultrasonic and Infrared Sensors: Detect obstacles and
+maintain safe distances between the cart and customers.
+• RFID Scanners and Barcode Readers: Automate
+product identification as items are added to the cart.
+• Onboard
+Computing
+(Raspberry
+Pi):
+Perform
+real-time processing of sensor data and control cart
+movement.
+• Cloud Infrastructure: Handle computationally inten-
+sive tasks, such as customer profiling, demand forecast-
+ing, and generating personalized recommendations.
+B. DATASETS
+Two primary datasets are used for system evaluation:
+• Retail Transaction Dataset (RTD): Contains historical
+sales data from a large-scale retail environment and is
+used for training the demand forecasting model, includ-
+ing features such as product sales history, customer
+demographics, and purchase patterns.
+• Shopping Mall Dataset (SMD): Consists of labeled
+RGB-D video sequences from crowded environments,
+used to train and evaluate the customer tracking system.
+This dataset provides a range of customer behaviors
+and movement patterns, ideal for testing tracking
+robustness.
+55580
+VOLUME 13, 2025
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+C. BASELINE ALGORITHMS
+To validate the performance of the AI-powered smart
+shopping cart system, comparisons are made against the
+following baseline algorithms commonly used in retail
+automation systems:
+• A* Pathfinding Algorithm [26]: A standard algorithm
+for finding the shortest path in static environments, used
+here to evaluate the cart’s navigation efficiency.
+• Dynamic Window Approach (DWA) [27]: A real-time
+path planning algorithm that dynamically avoids obsta-
+cles, used to compare dynamic navigation capabilities in
+real-world environments.
+• Collaborative
+Filtering
+[28]:
+A
+recommendation
+algorithm based on user-item interactions, used to
+evaluate recommendation accuracy.
+• ARIMA (Autoregressive Integrated Moving Aver-
+age) [29]: A statistical model for time-series forecasting,
+used as a baseline to compare the LSTM model’s
+demand forecasting performance.
+• Matrix Factorization (MF) [30]: A collaborative
+filtering approach for generating personalized product
+recommendations, providing a comparative perfor-
+mance baseline with the system’s deep learning-based
+recommendation model.
+D. EVALUATION METRICS
+The performance of the AI-powered smart shopping cart
+system is evaluated using the following metrics:
+• Tracking
+Accuracy:
+Assessed
+through
+precision,
+recall,
+and
+F1-score,
+measuring
+the
+accuracy
+of
+customer tracking and re-identification in crowded
+environments.
+• Navigation Efficiency: Metrics such as path length,
+time to destination, collision rate, and success rate (task
+completion without failure) are used to evaluate cart
+navigation.
+• Recommendation Accuracy: Measured using Preci-
+sion@k, Recall@k, and Mean Reciprocal Rank (MRR)
+to assess the relevance of recommended products based
+on customer purchase history.
+• Demand Forecasting Accuracy: Mean Squared Error
+(MSE), Mean Absolute Error (MAE), and Root Mean
+Squared Error (RMSE) are used to evaluate the LSTM
+model’s demand forecasting.
+• User Satisfaction: Survey-based metrics such as
+ease of use, recommendation relevance, and shopping
+experience.
+• Scalability and Robustness: Measured the system’s
+ability to handle concurrent users, recover from failures,
+and maintain real-time performance.
+VI. RESULTS
+This section presents the evaluation results of the proposed
+AI-powered smart shopping cart system, compared with
+baseline algorithms across various aspects such as tracking
+accuracy, navigation efficiency, recommendation accuracy,
+demand forecasting, and system robustness.
+A. TRACKING ACCURACY
+We assess the tracking accuracy of the proposed system,
+which combines the Kalman filter with Re-ID, against
+standalone Kalman filter and Re-ID approaches. Table 2
+and Figure 2 display the results, showing that the combined
+method achieved a precision of 0.94, recall of 0.92, and
+F1-score of 0.93, surpassing the Kalman filter (F1-score:
+0.83) and Re-ID alone (F1-score: 0.86). The ID Switch Rate
+(IDSR) for the proposed method is significantly lower at 0.03,
+highlighting its robustness in crowded environments.
+We performed a statistical t-test to confirm that the preci-
+sion and F1-score improvements over standalone methods are
+statistically significant (p < 0.05). The findings indicate that
+the proposed system can reliably track individual customers
+in practical retail scenarios, improving user experience by
+reducing misidentifications and interruptions.
+FIGURE 2. Tracking accuracy: F1-Score comparison.
+B. TRACKING ACCURACY AND ENVIRONMENTAL
+CONDITION ANALYSIS
+To assess robustness, tracking accuracy is measured under
+different lighting (bright, dim, low-light) and crowd density
+conditions (low, medium, high). The Kalman filter + Re-ID
+method is compared with relevant baseline methods: Kalman
+filter only, Re-ID model only, optical flow tracking, and
+YOLO-based object detection. As shown in Table 3, the
+Kalman filter + Re-ID approach maintained high accuracy
+in bright conditions (F1-score: 0.93) but showed slight
+decreases in low-light (F1-score: 0.88) and high-density
+settings (F1-score: 0.90). This performance exceeded that of
+the baseline methods under each condition, suggesting that
+the combined Kalman filter + Re-ID model is effective under
+standard conditions and moderately robust in challenging
+environments.
+The tracking accuracy of the baseline methods generally
+decreased under low-light and high-density conditions, with
+VOLUME 13, 2025
+55581
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+TABLE 2. Tracking accuracy results using SMD.
+optical flow and YOLO-based detection particularly sensitive
+to crowd density and lighting variations. These results
+underscore the advantages of combining Kalman filtering and
+Re-ID for robust tracking in retail environments.
+C. TRACKING ROBUSTNESS
+To assess the system’s robustness, tracking accuracy is tested
+under varying conditions such as high crowd density and
+low lighting. In high-density settings, the tracking system
+maintained an F1-score of 0.90 with a minor increase in the
+ID Switch Rate to 0.05. However, in low-light conditions,
+performance dropped slightly with an F1-score of 0.88,
+indicating sensitivity to lighting conditions. This analysis
+suggests that adding thermal or infrared sensors could
+improve robustness in adverse conditions.
+D. NAVIGATION EFFICIENCY AND REAL-TIME COLLISION
+AVOIDANCE TESTING WITH DYNAMIC OBSTACLES
+The system’s navigation efficiency is evaluated in environ-
+ments with static and dynamic obstacles, specifically testing
+real-time collision avoidance. The RL-based navigation
+system is compared with two established baseline methods:
+A* pathfinding and Dynamic Window Approach (DWA).
+As shown in Table 4 and Figure 3, the RL-based system
+maintained a collision rate below 0.03 and achieved a success
+rate of 96% in high-density and dynamic obstacle settings.
+The RL-based system outperformed both A* and DWA,
+especially in dynamic obstacle scenarios, where it maintained
+lower collision rates and shorter path lengths, showcasing its
+adaptive capability to avoid obstacles in real-time.
+E. NAVIGATION RELIABILITY AND ROBUSTNESS
+The navigation system is further evaluated under condi-
+tions with varying obstacle density and dynamic obstacles
+(e.g., moving individuals). The RL-based navigation system
+showed a 96% success rate in high-density obstacle scenarios,
+compared to 85% and 89% for A* and DWA, respectively.
+The RL approach dynamically adjusted paths in response to
+moving obstacles, demonstrating adaptability that is critical
+in retail environments with high foot traffic.
+F. RECOMMENDATION ACCURACY
+The deep learning-based recommendation system outper-
+formed collaborative filtering (CF) and matrix factorization
+(MF) in terms of Precision@5, Recall@5, and Mean
+Reciprocal Rank (MRR). As shown in Table 5 and Figure 4,
+the proposed method reached a Precision@5 of 0.88, higher
+than CF (0.76) and MF (0.80), with an MRR of 0.84,
+demonstrating its ability to provide relevant and personalized
+recommendations.
+G. REAL-TIME DEMAND FORECASTING IN DYNAMIC
+RETAIL SCENARIOS
+To evaluate adaptability, the LSTM-based demand forecast-
+ing model is tested in scenarios with simulated demand
+surges (e.g., flash sales or promotions). Table 6 shows the
+model’s accuracy over time, with Mean Squared Error (MSE)
+increasing slightly during the surge but stabilizing afterward.
+The LSTM model adjusted within 5 minutes of the demand
+spike, demonstrating its responsiveness to rapid changes.
+H. DEMAND FORECASTING ACCURACY
+The LSTM-based demand forecasting model demonstrated
+superior accuracy over ARIMA, achieving lower MSE
+(0.034), MAE (0.055), and RMSE (0.046) as presented in
+Table 7 and Figure 5. The forecast bias is also significantly
+lower, indicating the model’s capability to manage inventory
+effectively and reduce stockouts.
+I. USER SATISFACTION ANALYSIS
+User surveys are conducted to evaluate satisfaction with
+system features, such as ease of use, recommendation
+relevance, and overall shopping experience. Results indicated
+an 85% satisfaction rate, with high ratings in ease of use and
+recommendation quality. User feedback also highlighted the
+convenience of automated billing and the accuracy of real-
+time recommendations.
+J. SCALABILITY AND SYSTEM LATENCY
+The system is tested with up to 50 concurrent carts in
+a simulated retail environment. Average system latency
+remained below 200 ms, ensuring real-time responsiveness.
+Performance scaled effectively, with minor latency increases
+observed as the number of carts approached capacity,
+indicating robustness under increased loads.
+K. SUMMARY OF RESULTS
+The proposed AI-powered smart shopping cart system
+consistently outperformed baseline algorithms across all
+evaluated tasks:
+• Tracking Accuracy: The combined Kalman filter + Re-
+ID approach achieves higher precision, recall, and F1-
+score, with a significantly reduced ID Switch Rate.
+• Navigation Efficiency and Robustness: RL-based
+navigation demonstrated shorter paths, reduced travel
+time, and higher adaptability in dynamic environments.
+55582
+VOLUME 13, 2025
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+TABLE 3. Tracking accuracy across environmental conditions for proposed and baseline methods using SMD.
+TABLE 4. Navigation efficiency and collision avoidance in dynamic environments using the SMD.
+FIGURE 3. Collision avoidance in dynamic environments.
+TABLE 5. Recommendation system performance (k=5) using RTD.
+TABLE 6. Demand forecasting accuracy during normal and surge events
+using RTD.
+• Recommendation Accuracy: The deep learning model
+provided more relevant and diverse recommendations
+compared to CF and MF.
+TABLE 7. Demand forecasting accuracy results using RTD.
+• Demand Forecasting Accuracy: The LSTM model
+demonstrated higher accuracy with reduced forecasting
+errors and bias, supporting effective inventory manage-
+ment.
+• User Satisfaction and Scalability: High user satisfac-
+tion rates and robust scalability indicate the system’s
+potential for practical deployment.
+These results validate the system’s capability to enhance
+retail operations by improving tracking, navigation, person-
+alization, and demand forecasting.
+VOLUME 13, 2025
+55583
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+FIGURE 4. Recommendation accuracy: Precision@5 comparison.
+FIGURE 5. Demand forecasting accuracy: MSE comparison.
+VII. CONCLUSION
+In conclusion, the proposed AI-powered smart shopping
+cart system successfully demonstrates the transformative
+potential of advanced AI and ML technologies in the retail
+sector. By integrating person-specific tracking, RL for path
+optimization, and LSTM-based demand forecasting, the
+system enhances both the shopping experience and oper-
+ational efficiency. Through real-time data collection, edge
+computing, and cloud-based decision-making, this system
+addresses key challenges in modern retail, such as inefficient
+inventory management, suboptimal customer experiences,
+and manual checkout processes. The experimental results
+show significant improvements in customer satisfaction,
+operational efficiency, and inventory management when
+compared to baseline systems. This system provides a fully
+autonomous and adaptive retail solution that not only reduces
+costs but also enhances the overall shopping experience
+through personalized recommendations and seamless billing
+integration.
+While our system has demonstrated strong performance
+in controlled environments, we acknowledge that real-world
+deployment in retail stores may introduce additional chal-
+lenges. Factors such as varying lighting conditions, high
+customer density, and complex store layouts could influence
+tracking accuracy and navigation efficiency. Future work will
+focus on large-scale testing in diverse retail settings to assess
+these impacts. Additionally, integrating adaptive AI models
+that can dynamically adjust to environmental conditions will
+further enhance system robustness and usability in real-world
+scenarios.
+ACKNOWLEDGMENT
+(Muhammad Imran Zulfiqar and Ayesha Khalid contributed
+equally to this work.)
+REFERENCES
+[1] H.-P. Lu, H.-L. Cheng, J.-C. Tzou, and C.-S. Chen, ‘‘Technology roadmap
+of AI applications in the retail industry,’’ Technol. Forecasting Social
+Change, vol. 195, Oct. 2023, Art. no. 122778.
+[2] M. R. Kumar, J. Venkatesh, and A. M. J. M. Z. Rahman, ‘‘Data mining
+and machine learning in retail business: Developing efficiencies for better
+customer retention,’’ J. Ambient Intell. Humanized Comput., vol. 2021,
+pp. 1–13, Jan. 2021.
+[3] M. Sharma, A. Tomar, and A. Hazra, ‘‘Edge computing for industry 5.0:
+Fundamental, applications and research challenges,’’ IEEE Internet Things
+J., 2024.
+[4] I. Ahmed, G. Jeon, and F. Piccialli, ‘‘From artificial intelligence to
+explainable artificial intelligence in industry 4.0: A survey on what, how,
+and where,’’ IEEE Trans. Ind. Informat., vol. 18, no. 8, pp. 5031–5042,
+Aug. 2022.
+[5] R. Wolniak, K. Stecuła, and B. Aydın, ‘‘Digital transformation of grocery
+in-store shopping-scanners, artificial intelligence, augmented reality and
+beyond: A review,’’ Foods, vol. 13, no. 18, p. 2948, Sep. 2024.
+[6] L. A. Escudero-Gómez, ‘‘Shopping centers challenging decline: Competi-
+tive strategies in three case studies from Madrid’s urban area,’’ J. Retailing
+Consum. Services, vol. 79, Jul. 2024, Art. no. 103826.
+[7] R. Narang and S. Tiwari, ‘‘Role of modern technology in unorganized retail
+sector,’’ J. Knowl. Econ., vol. 2024, pp. 1–28, May 2024.
+[8] A. Ala, A. H. Sadeghi, M. Deveci, and D. Pamucar, ‘‘Improving smart deals
+system to secure human-centric consumer applications: Internet of Things
+and Markov logic network approaches,’’ Electron. Commerce Res., vol. 24,
+no. 2, pp. 771–797, Jun. 2024.
+[9] S. R. Sandeep, S. Ahamad, D. Saxena, K. Srivastava, S. Jaiswal, and
+A. Bora, ‘‘To understand the relationship between machine learning and
+artificial intelligence in large and diversified business organisations,’’
+Mater. Today, Proc., vol. 56, pp. 2082–2086, Jan. 2022.
+[10] A. H. Sodhro, S. Pirbhulal, and V. H. C. de Albuquerque, ‘‘Artificial
+intelligence-driven mechanism for edge computing-based industrial appli-
+cations,’’ IEEE Trans. Ind. Informat., vol. 15, no. 7, pp. 4235–4243,
+Jul. 2019.
+[11] Y. K. Dwivedi et al., ‘‘Artificial intelligence (AI): Multidisciplinary
+perspectives on emerging challenges, opportunities, and agenda for
+research, practice and policy,’’ Int. J. Inf. Manage., vol. 57, Aug. 2019,
+Art. no. 101994.
+[12] S. Karjol, A. K. Holla, C. B. Abhilash, P. V. Amrutha, and Y. V. Manohar,
+‘‘An IoT based smart shopping cart for smart shopping,’’ in Proc. Int. Conf.
+Cognit. Comput. Inf. Process., Jan. 2018, pp. 373–385.
+[13] M. A. Sarwar, Y. A. Daraghmi, K. W. Liu, H. C. Chi, T. U. Ik, and Y. L. Li,
+‘‘Smart shopping carts based on mobile computing and deep learning
+cloud services,’’ in Proc. IEEE Wireless Commun. Netw. Conf. (WCNC),
+May 2020, pp. 1–6.
+[14] M. Schmitt, ‘‘Automated machine learning: AI-driven decision making in
+business analytics,’’ Intell. Syst. Appl., vol. 18, May 2023, Art. no. 200188.
+[15] D. Grewal, S. Benoit, S. M. Noble, A. Guha, C.-P. Ahlbom, and
+J. Nordfält, ‘‘Leveraging in-store technology and AI: Increasing customer
+and employee efficiency and enhancing their experiences,’’ J. Retailing,
+vol. 99, no. 4, pp. 487–504, Dec. 2023.
+[16] C. Campbell, S. Sands, C. Ferraro, H.-Y.-J. Tsao, and A. Mavrommatis,
+‘‘From data to action: How marketers can leverage AI,’’ Bus. Horizons,
+vol. 63, no. 2, pp. 227–243, Mar. 2020.
+55584
+VOLUME 13, 2025
+M. I. Zulfiqarx et al.: AI-Driven Smart Shopping Carts With Real-Time Tracking and Inventory Forecasting
+[17] K. Yan, L. Liu, Y. Xiang, and Q. Jin, ‘‘Guest editorial: AI and machine
+learning solution cyber intelligence technologies: New methodologies and
+applications,’’ IEEE Trans. Ind. Informat., vol. 16, no. 10, pp. 6626–6631,
+Oct. 2020.
+[18] A.
+M.
+Pereira,
+J.
+A.
+B.
+Moura,
+E.
+D.
+B.
+Costa,
+T.
+Vieira,
+A. R. D. B. Landim, E. Bazaki, and V. Wanick, ‘‘Customer models
+for artificial intelligence-based decision support in fashion online retail
+supply chains,’’ Decis. Support Syst., vol. 158, Jul. 2022, Art. no. 113795.
+[19] M.-A. Blais and M. A. Akhloufi, ‘‘Reinforcement learning for swarm
+robotics: An overview of applications, algorithms and simulators,’’ Cognit.
+Robot., vol. 3, pp. 226–256, Jan. 2023.
+[20] M. I. Zulfiqar, I. Abdullah, A. Akram, S. Mehmood, Fareeha, and A. Ali,
+‘‘An efficient autonomous maze solving robot based on microcontroller by
+avoiding obstacles using a decision-making algorithm,’’ in Proc. Int. Conf.
+IT Ind. Technol. (ICIT), Oct. 2023, pp. 1–6.
+[21] J. Reis, N. Melão, J. Salvadorinho, B. Soares, and A. Rosete, ‘‘Service
+robots in the hospitality industry: The case of henn-na hotel, Japan,’’
+Technol. Soc., vol. 63, Nov. 2020, Art. no. 101423.
+[22] S. Mukherjee, M. M. Baral, R. Nagariya, C. Venkataiah, U. V. A. Rao, and
+K. S. Rao, ‘‘Systematic literature review and future research directions for
+service robots in hospitality and tourism industries,’’ Service Industries J.,
+vol. 43, nos. 15–16, pp. 1083–1116, Dec. 2023.
+[23] H. He, J. Gray, A. Cangelosi, Q. Meng, T. M. McGinnity, and J. Mehnen,
+‘‘The challenges and opportunities of human-centered AI for trustworthy
+robots and autonomous systems,’’ IEEE Trans. Cognit. Develop. Syst.,
+vol. 14, no. 4, pp. 1398–1412, Dec. 2022.
+[24] D. Mronga, A. Bresser, F. Maas genannt Bermpohl, A. Danzglock,
+S. Stelter, A. Hawkin, H. G. Nguyen, M. Beetz, and F. Kirchner,
+‘‘MARLIN: A cloud integrated robotic solution to support intralogistics
+in retail,’’ Robot. Auto. Syst., vol. 175, May 2024, Art. no. 104654.
+[25] I. Keshta, ‘‘AI-driven IoT for smart health care: Security and privacy
+issues,’’ Informat. Med. Unlocked, vol. 30, Jan. 2022, Art. no. 100903.
+[26] F. Grenouilleau, W.-J.-V. Hoeve, and J. N. Hooker, ‘‘A multi-label A
+algorithm for multi-agent pathfinding,’’ in Proc. Int. Conf. Automated
+Planning Scheduling, vol. 29, pp. 181–185, Jul. 2019.
+[27] M. Kobayashi and N. Motoi, ‘‘Local path planning: Dynamic window
+approach with virtual manipulators considering dynamic obstacles,’’ IEEE
+Access, vol. 10, pp. 17018–17029, 2022.
+[28] M. K. Najafabadi, M. N. Mahrin, S. Chuprat, and H. M. Sarkan,
+‘‘Improving the accuracy of collaborative filtering recommendations using
+clustering and association rules mining on implicit data,’’ Comput. Hum.
+Behav., vol. 67, pp. 113–128, Feb. 2017.
+[29] R. H. Shumway, D. S. Stoffer, R. H. Shumway, and D. S. Stoffer, ‘‘ARIMA
+models,’’ in Time Series Analysis and Its Applications: With R Examples.
+USA: Springer, 2017, pp. 75–163.
+[30] D. Bokde, S. Girase, and D. Mukhopadhyay, ‘‘Matrix factorization model
+in collaborative filtering algorithms: A survey,’’ Proc. Comput. Sci.,
+vol. 49, pp. 136–146, Jan. 2015.
+MUHAMMAD IMRAN ZULFIQAR received
+the B.Sc. degree in Computer Engineering from
+the University of Engineering and Technology,
+Lahore, Pakistan, the M.S. degree in Com-
+puter Science from the University of Agriculture
+Faisalabad, Pakistan, and the Ph.D. degree from
+the School of Computer Science and Engineering,
+Nanjing University of Science and Technology,
+Nanjing, China.
+He has published some technical papers in
+prominent journals and conferences, such as IEEE INTERNET OF THINGS
+JOURNAL, IEEE ACCESS, Fundamental Research, and PeerJ Computer
+Science. His research interests include machine learning, data mining, the
+Internet of Things, information security, and robotics. He also serves as
+a Reviewer for IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING
+SYSTEMS and Pattern Recognition Letters.
+AYESHA KHALID received the B.S.C.S. degree
+from the Department of Computer Science and IT,
+University of Jhang, Jhang, Pakistan, in 2024.
+She has research focused on the Internet of
+Medical Things for Hand Gesture Recognition
+Systems, which lies at the intersection of machine
+learning and deep learning.
+ABUBAKR SIDDIG received the Ph.D. degree
+in Computer Science. He is currently a Faculty
+Member with the School of Computer Science,
+Technological University Dublin, Ireland. He has
+contributed extensively to the fields of localization
+and AI-driven applications, with publications in
+reputable international journals and conferences.
+He is actively involved in interdisciplinary projects
+aimed at advancing computational methods. His
+research interests include data science, natural
+language processing, data mining, and speech and audio quality analysis.
+MUHAMMAD JUNAID NAWAZ received the
+B.S. and M.S. degrees in Computer Science from
+the Qurtuba University of Science and Infor-
+mation Technology, Dera Ismail Khan, Khyber
+Pakhtunkhwa, Pakistan.
+He has research focused on the Internet of
+Medical Things for Hand Gesture Recognition
+Systems, which lies at the intersection of machine
+learning and deep learning.
+SALIM SAAY received the Ph.D. degree in
+Computer Science from Kabul University.
+He is currently an Associate Professor with the
+Department of Computer Science and Information
+Systems, University of Limerick, Ireland, and a
+member of Lero—the SFI Research Centre for
+Software. He has held academic and research
+positions with the Technological University of
+Shannon (TUS) and Kabul University. He has
+authored several research papers in prestigious
+journals and conferences, including IEEE TRANSACTIONS and other prominent
+venues. His research interests include software architecture, blockchain inte-
+gration, artificial intelligence, e-learning, and organizational collaboration
+technologies. He also serves as a reviewer for top-tier journals.
+VOLUME 13, 2025
+55585

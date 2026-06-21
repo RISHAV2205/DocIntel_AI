@@ -22,7 +22,7 @@ def extract_text(file_path: str):
         raise ValueError("No text extracted")
 
     filename = os.path.basename(file_path)
-    print("llllll",filename)
+    print("file_name",filename)
     text_filename = filename.rsplit(".", 1)[0] + ".txt"
     text_path = os.path.join(PROCESSED_TEXT_DIR, text_filename)
 

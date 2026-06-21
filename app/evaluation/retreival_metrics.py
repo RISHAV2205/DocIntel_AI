@@ -17,7 +17,6 @@ def mrr_score(
     ):
         if expected_keyword.lower() in chunk.lower():
             return 1 / (idx + 1)
-
     return 0
 
 def hit_rate(

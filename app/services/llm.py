@@ -25,7 +25,7 @@ def generate_answer(prompt):
                 "content": prompt
             }
         ],
-        "max_tokens": 100,
+        "max_tokens": 300,
         "temperature": 0.5
     }
     response = requests.post(
@@ -56,7 +56,7 @@ def generate_answer_stream(prompt: str):
     payload = {
         "model": "deepseek-ai/DeepSeek-V4-Flash",
         "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 300,
+        "max_tokens": 100,
         "temperature": 0.5,
         "stream": True   # this is the only change in payload
     }

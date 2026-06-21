@@ -9,10 +9,10 @@ from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
 from app.services.document_task import process_document_task
 from app.models import Document
+from app.services.storage import upload_file, delete_file 
 
 # for embedding
 from app.services.embedding import generate_embedding
-
 
 router = APIRouter(
     prefix="/documents",
@@ -27,7 +27,6 @@ def upload_document(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    # validate file type
     allowed_extensions = [".pdf", ".txt", ".docx"]
     file_ext = os.path.splitext(file.filename)[1]
 
@@ -36,37 +35,37 @@ def upload_document(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Unsupported file type"
         )
+    # read entire file
+    file_bytes = file.file.read()
 
-    # save file to disk
-    file_path = f"{UPLOAD_DIR}/{current_user.id}_{file.filename}"
     try:
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-    except Exception:
+        storage_key = upload_file(
+            file_bytes=file_bytes,
+            filename=file.filename,
+            user_id=current_user.id
+        )
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to save file"
+            detail=f"Failed to upload file: {str(e)}"
         )
 
-    # create DB record with status queued
     new_document = models.Document(
         filename=file.filename,
-        file_path=file_path,
+        file_path=storage_key,
         owner_id=current_user.id,
-        status="queued"           # ✅ queued instead of uploaded
+        status="queued"
     )
     db.add(new_document)
     db.commit()
     db.refresh(new_document)
 
-    # fire background task — returns immediately
-    process_document_task.delay(new_document.id)   # ✅ non-blocking
+    process_document_task.delay(new_document.id)
 
-    # return instantly — no waiting for processing
     return {
         "id": new_document.id,
         "filename": new_document.filename,
-        "status": new_document.status,   # returns "queued"
+        "status": new_document.status,
         "message": "Document uploaded. Processing in background."
     }
 
@@ -107,20 +106,13 @@ def delete_document(
     ).first()
 
     if not document:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Document not found"
-        )
+        raise HTTPException(status_code=404, detail="Document not found")
 
-    # delete uploaded file
-    if os.path.exists(document.file_path):
-        os.remove(document.file_path)
+    try:
+        delete_file(document.file_path)
+    except Exception:
+        pass
 
-    # delete extracted text
-    if document.extracted_text_path and os.path.exists(document.extracted_text_path):
-        os.remove(document.extracted_text_path)
-
-    # delete document (chunks will delete automatically if cascade is set)
     db.delete(document)
     db.commit()
 

@@ -1,8 +1,7 @@
 def chunk_text(
     text: str,
     chunk_size: int = 400,
-    overlap: int = 50
-) -> list[str]:
+    overlap: int = 50):
     """
     Split cleaned text into overlapping word-based chunks.
     Uses only Python standard library.

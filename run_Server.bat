@@ -1,12 +1,18 @@
 @echo off
-:: 1. Navigate to your project folder
-cd /d "D:\FastAPI"
 
-:: 2. Activate the virtual environment
-call venv\Scripts\activate
+echo Starting Redis...
+start cmd /k "docker start redis-server"
 
-:: 3. Run the server
-uvicorn app.main:app --reload
+timeout /t 3
 
-:: 4. Keep the window open so you can see logs (optional)
-cmd /k
+echo Starting Celery...
+start cmd /k "cd /d D:\Fastapi && venv\Scripts\activate && celery -A app.celery_app worker --loglevel=info --pool=solo"
+
+echo Starting FastAPI...
+start cmd /k "cd /d D:\Fastapi && venv\Scripts\activate && uvicorn app.main:app --reload"
+
+echo Starting Frontend...
+start cmd /k "cd /d D:\Fastapi\frontend && venv\Scripts\activate && npm run dev"
+
+echo All services started.
+pause
