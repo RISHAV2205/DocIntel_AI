@@ -19,7 +19,6 @@ router = APIRouter(
     tags=["Documents"]
 )
 
-UPLOAD_DIR = "app/uploads"
 
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 def upload_document(
@@ -37,6 +36,7 @@ def upload_document(
         )
     # read entire file
     file_bytes = file.file.read()
+    print(file_bytes)
 
     try:
         storage_key = upload_file(

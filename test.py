@@ -13,3 +13,6 @@ print(f"Uploaded: {key}")
 content = download_file(key)
 print(f"Downloaded: {content}")
 
+# test delete
+delete_file(key)
+print("Deleted")

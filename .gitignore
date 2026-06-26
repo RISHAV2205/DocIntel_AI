@@ -1,4 +1,8 @@
+processed/
+uploads/
+
 venv/
 __pycache__/
 *.pyc
 .env
+
