@@ -1,18 +1,27 @@
-# test_s3.py
+# test_jina.py
 import sys
 sys.path.append(".")
 
-from app.services.storage import upload_file, download_file, delete_file
+from app.services.embedding import generate_embedding, generate_embeddings_batch
+from app.services.cross_encoder import rerank
 
-# test upload
-test_bytes = b"Hello S3 test"
-key = upload_file(test_bytes, "test.txt", user_id=999)
-print(f"Uploaded: {key}")
+print("Testing embedding...")
+emb = generate_embedding("what is machine learning")
+print(f"Dimension: {len(emb)}")   # must be 768
 
-# test download
-content = download_file(key)
-print(f"Downloaded: {content}")
+print("\nTesting batch embedding...")
+embs = generate_embeddings_batch(["hello world", "machine learning", "deep learning"])
+print(f"Batch: {len(embs)} embeddings, each {len(embs[0])} dim")
 
-# test delete
-delete_file(key)
-print("Deleted")
+print("\nTesting reranker...")
+query = "what is machine learning"
+chunks = [
+    "Machine learning is a subset of AI that learns from data",
+    "Paris is the capital of France",
+    "Neural networks are inspired by the human brain",
+    "The weather today is sunny and warm"
+]
+result = rerank(query, chunks, top_k=2)
+print(f"Top 2 reranked chunks:")
+for i, r in enumerate(result):
+    print(f"{i+1}. {r[:80]}")

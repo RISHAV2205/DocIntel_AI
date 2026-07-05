@@ -57,7 +57,7 @@ class DocumentChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     chunk_text = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    embedding = Column(Vector(384), nullable=True)
+    embedding = Column(Vector(768), nullable=True)
 
     # Relationship
     document = relationship("Document", back_populates="chunks")
