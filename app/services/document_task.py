@@ -3,7 +3,7 @@ from app.database import session_local
 from app import models
 from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
-from app.services.embedding import generate_embedding
+from app.services.embedding import generate_embedding,generate_embeddings_batch
 from app.services.storage import download_file   # ✅ NEW
 import os
 import tempfile
@@ -44,17 +44,20 @@ def process_document_task(self, document_id: int):
         chunks = process_extracted_text(text_path)
 
         # Step 4 — embed and store
-        for i, chunk_text in enumerate(chunks):
-            vector = generate_embedding(chunk_text)
-            chunk = models.DocumentChunk(
-                document_id=document.id,
-                chunk_index=i,
-                chunk_text=chunk_text,
-                embedding=vector
-            )
-            db.add(chunk)
+        batch_size = 32
+        for batch_start in range(0, len(chunks), batch_size):
+            batch = chunks[batch_start:batch_start + batch_size]
+            embeddings = generate_embeddings_batch(batch)   # ✅ batch
 
-        db.commit()
+            for i, (chunk_text, vector) in enumerate(zip(batch, embeddings)):
+                chunk = models.DocumentChunk(
+                    document_id=document.id,
+                    chunk_index=batch_start + i,
+                    chunk_text=chunk_text,
+                    embedding=vector
+                )
+                db.add(chunk)
+            db.commit()
 
         document.status = "ready"
         db.commit()

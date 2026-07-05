@@ -7,10 +7,9 @@ with open(
 ) as f:
     test_cases = json.load(f)
     
+# print(test_cases)
 from app.database import session_local
-
 from app.services.retrieval_service import retrieve_chunks
-
 from app.evaluation.retreival_metrics import (
     recall_at_k,
     mrr_score,
@@ -24,16 +23,16 @@ total_mrr = 0
 total_hit_rate = 0
 
 for test in test_cases:
-
     question = test["question"]
     expected_keyword = test["expected_chunk_keyword"]
 
     retrieved_chunks = retrieve_chunks(
         question=question,
         db=db,
-        user_id=6
+        user_id=5
     )
-
+    # print("retrieve chunks",retrieved_chunks)
+    
     total_recall += recall_at_k(
         retrieved_chunks,
         expected_keyword

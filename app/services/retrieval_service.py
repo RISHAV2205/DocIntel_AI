@@ -1,8 +1,7 @@
 from sqlalchemy import text
 
-from app.services.embedding import generate_embedding
+from app.services.embedding import generate_embedding,generate_embeddings_batch
 from app.services.cross_encoder import rerank
-
 
 def retrieve_chunks(
     question,
@@ -32,6 +31,7 @@ def retrieve_chunks(
     ).fetchall()
 
     retrieved_chunks = [row[0] for row in rows]
+    # print(retrieve_chunks)
 
     final_chunks = rerank(
         question,
