@@ -9,7 +9,7 @@ from sqlalchemy import text
 import json
 from app.services.retrieval_service import retrieve_chunks
 from app.services.llm import generate_answer
-from app.services.cross_encoder import rerank
+# from app.services.cross_encoder import rerank
 
 router = APIRouter()
 
@@ -41,8 +41,7 @@ def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = De
         return {"message": "No documents found"}
 
     top_chunks,top_scores=retrieve_chunks(rows,query_embedding)
-    reranked_chunks=rerank(request.query,top_chunks)
-    ans= generate_answer(request.query, reranked_chunks)
+    ans= generate_answer(request.query, top_chunks)
     
 
     # Step 5: Return result

@@ -1,14 +1,13 @@
 from sqlalchemy import text
 
 from app.services.embedding import generate_embedding,generate_embeddings_batch
-from app.services.cross_encoder import rerank
+# from app.services.cross_encoder import rerank
 
 def retrieve_chunks(
     question,
     db,
     user_id,
-    top_k_retrieval=10,
-    top_k_rerank=3
+    top_k_retrieval=5,
 ):
 
     query_embedding = generate_embedding(question)
@@ -33,10 +32,10 @@ def retrieve_chunks(
     retrieved_chunks = [row[0] for row in rows]
     # print(retrieve_chunks)
 
-    final_chunks = rerank(
-        question,
-        retrieved_chunks,
-        top_k=top_k_rerank
-    )
+    # final_chunks = rerank(
+    #     question,
+    #     retrieved_chunks,
+    #     top_k=top_k_rerank
+    # )
 
-    return final_chunks
+    return retrieved_chunks

@@ -9,7 +9,7 @@ from app.models import Chat, Message
 from app.schema import MessageRequest
 
 from app.services.embedding import generate_embedding
-from app.services.cross_encoder import rerank
+# from app.services.cross_encoder import rerank
 from app.services.llm import generate_answer, generate_answer_stream  
 from app.services.retrieval_service import retrieve_chunks
 
@@ -225,28 +225,10 @@ def send_message_stream(
             detail="No document chunks found. Please upload a document first."
         )
 
-    rows = db.execute(
-    text("""
-        SELECT dc.chunk_text
-        FROM document_chunks dc
-        JOIN documents d
-        ON dc.document_id = d.id
-        WHERE d.owner_id = :user_id
-        ORDER BY dc.embedding <=> CAST(:query_embedding AS vector)
-        LIMIT 10
-    """),
-    {
-        "user_id": current_user.id,
-        "query_embedding": str(query_embedding)
-    }
-    ).fetchall()
-
-    # print(rows)
-
-    retrieved_chunks = [row[0] for row in rows]
+    final_chunks=retrieve_chunks(request.query,db,current_user.id)
 
     # Step 6 — rerank
-    final_chunks = rerank(request.query, retrieved_chunks, top_k=3)
+    # final_chunks = rerank(request.query, retrieved_chunks, top_k=3)
 
     # Step 7 — build history (your existing logic)
     previous_messages = db.query(Message).filter(
