@@ -1,12 +1,9 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from sqlalchemy.orm import Session
 import os
-import shutil
 from app import models
 from app.database import get_db
 from app.oauth2 import get_current_user
-from app.services.text_extractor import extract_text
-from app.services.document_processor import process_extracted_text
 from app.services.document_task import process_document_task
 from app.models import Document
 from app.services.storage import upload_file, delete_file 

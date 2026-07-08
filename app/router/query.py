@@ -9,7 +9,6 @@ from sqlalchemy import text
 import json
 from app.services.retrieval_service import retrieve_chunks
 from app.services.llm import generate_answer
-# from app.services.cross_encoder import rerank
 
 router = APIRouter()
 
