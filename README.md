@@ -4,11 +4,11 @@ An industry-grade **Conversational Retrieval-Augmented Generation (RAG)** platfo
 
 The platform enables users to upload documents, build a semantic knowledge base, and interact with an AI assistant capable of retrieving contextually relevant information while maintaining persistent multi-turn conversations.
 
-Designed with production-oriented backend engineering principles, asynchronous document processing, scalable storage, and modular AI services.
+Designed with production-oriented backend engineering principles, asynchronous document processing, scalable storage, retrieval evaluation and modular AI services.
 
 ---
 
-# ⭐ Highlights
+# ## ⭐ Highlights
 
 - 🔐 JWT Authentication & Authorization
 - 📄 Intelligent Document Processing Pipeline
@@ -17,7 +17,7 @@ Designed with production-oriented backend engineering principles, asynchronous d
 - 🚀 Redis Message Queue
 - 🧠 Jina AI Embedding API
 - 🔍 Semantic Vector Search using pgvector
-- 🎯 Cross-Encoder Neural Reranking
+- 📊 Retrieval Evaluation Framework (Recall@K, Precision@K, Context Recall, MRR, Hit Rate)
 - 💬 Persistent Conversational Memory
 - 🤖 DeepSeek LLM Integration
 - 📚 Multi-Document Knowledge Base
