@@ -1,152 +1,256 @@
 [
   {
     "question": "What is the main topic of this lesson?",
-    "expected_chunk_keyword": "classification models with Keras",
+    "ground_truth_keywords": [
+      "classification models with Keras",
+      "Keras",
+      "classification"
+    ],
     "expected_answer": "The lesson explains how to build classification models using the Keras library."
   },
   {
     "question": "What type of machine learning problem is discussed in this video?",
-    "expected_chunk_keyword": "classification problems",
+    "ground_truth_keywords": [
+      "classification problems",
+      "classification",
+      "machine learning"
+    ],
     "expected_answer": "The video focuses on solving classification problems using Keras."
   },
   {
     "question": "What example dataset is used in the lesson?",
-    "expected_chunk_keyword": "car_data",
+    "ground_truth_keywords": [
+      "car_data",
+      "car dataset",
+      "dataset"
+    ],
     "expected_answer": "The lesson uses a car_data dataset for building a classification model."
   },
   {
     "question": "Which factors determine whether purchasing a car is a good choice?",
-    "expected_chunk_keyword": "price of the car",
+    "ground_truth_keywords": [
+      "price of the car",
+      "maintenance cost",
+      "passenger capacity"
+    ],
     "expected_answer": "The decision depends on the car's price, maintenance cost, and passenger capacity."
   },
   {
     "question": "What preprocessing technique was applied to the dataset?",
-    "expected_chunk_keyword": "one-hot encoding",
+    "ground_truth_keywords": [
+      "one-hot encoding",
+      "categorical variables",
+      "encoding"
+    ],
     "expected_answer": "One-hot encoding was used to transform categorical variables into separate columns."
   },
   {
     "question": "What are the possible price categories in the dataset?",
-    "expected_chunk_keyword": "high, medium, or low",
+    "ground_truth_keywords": [
+      "high",
+      "medium",
+      "low"
+    ],
     "expected_answer": "The car price can be categorized as high, medium, or low."
   },
   {
     "question": "What are the maintenance cost categories?",
-    "expected_chunk_keyword": "high, medium, or low",
+    "ground_truth_keywords": [
+      "high",
+      "medium",
+      "low",
+      "maintenance cost"
+    ],
     "expected_answer": "Maintenance cost is categorized as high, medium, or low."
   },
   {
     "question": "How many passenger capacity categories are considered?",
-    "expected_chunk_keyword": "two or more people",
+    "ground_truth_keywords": [
+      "two or more people",
+      "passenger capacity",
+      "two people"
+    ],
     "expected_answer": "The car can either fit two people or more than two people."
   },
   {
     "question": "What does a decision value of 0 represent?",
-    "expected_chunk_keyword": "bad choice",
+    "ground_truth_keywords": [
+      "bad choice",
+      "decision 0"
+    ],
     "expected_answer": "A decision value of 0 means purchasing the car would be a bad choice."
   },
   {
     "question": "What does a decision value of 1 indicate?",
-    "expected_chunk_keyword": "acceptable",
+    "ground_truth_keywords": [
+      "acceptable",
+      "decision 1"
+    ],
     "expected_answer": "A decision value of 1 means purchasing the car is acceptable."
   },
   {
     "question": "What does a decision value of 2 mean?",
-    "expected_chunk_keyword": "good decision",
+    "ground_truth_keywords": [
+      "good decision",
+      "decision 2"
+    ],
     "expected_answer": "A decision value of 2 means purchasing the car would be a good decision."
   },
   {
     "question": "What does a decision value of 3 represent?",
-    "expected_chunk_keyword": "very good decision",
+    "ground_truth_keywords": [
+      "very good decision",
+      "decision 3"
+    ],
     "expected_answer": "A decision value of 3 means purchasing the car would be a very good decision."
   },
   {
     "question": "Into what two parts is the dataset divided before training?",
-    "expected_chunk_keyword": "predictors and target",
+    "ground_truth_keywords": [
+      "predictors",
+      "target",
+      "predictors and target"
+    ],
     "expected_answer": "The dataset is divided into predictors and the target."
   },
   {
     "question": "Why can't the target column be used directly in Keras classification?",
-    "expected_chunk_keyword": "transform the column into an array with binary values",
+    "ground_truth_keywords": [
+      "binary values",
+      "transform the column",
+      "one-hot"
+    ],
     "expected_answer": "The target must first be converted into an array of binary values."
   },
   {
     "question": "Which Keras utility function is used to transform the target variable?",
-    "expected_chunk_keyword": "to_categorical",
+    "ground_truth_keywords": [
+      "to_categorical",
+      "categorical"
+    ],
     "expected_answer": "The to_categorical function is used to convert the target into binary vectors."
   },
   {
     "question": "How many neurons are required in the output layer?",
-    "expected_chunk_keyword": "4 neurons",
+    "ground_truth_keywords": [
+      "4 neurons",
+      "four neurons",
+      "four target classes"
+    ],
     "expected_answer": "The output layer contains four neurons because there are four target classes."
   },
   {
     "question": "Which model class is used to construct the neural network?",
-    "expected_chunk_keyword": "Sequential",
+    "ground_truth_keywords": [
+      "Sequential",
+      "Sequential model"
+    ],
     "expected_answer": "The Sequential model is used to construct the neural network."
   },
   {
     "question": "Which layer type is used to build the network?",
-    "expected_chunk_keyword": "Dense",
+    "ground_truth_keywords": [
+      "Dense",
+      "Dense layer"
+    ],
     "expected_answer": "Dense layers are used to build the neural network."
   },
   {
     "question": "Which activation function is used in the hidden layers?",
-    "expected_chunk_keyword": "relu",
+    "ground_truth_keywords": [
+      "relu",
+      "ReLU"
+    ],
     "expected_answer": "The hidden layers use the ReLU activation function."
   },
   {
     "question": "Which activation function is used in the output layer?",
-    "expected_chunk_keyword": "softmax",
+    "ground_truth_keywords": [
+      "softmax",
+      "Softmax"
+    ],
     "expected_answer": "The output layer uses the Softmax activation function."
   },
   {
     "question": "Why is the softmax activation function used?",
-    "expected_chunk_keyword": "sum nicely to 1",
+    "ground_truth_keywords": [
+      "sum to 1",
+      "probabilities",
+      "softmax"
+    ],
     "expected_answer": "Softmax converts outputs into probabilities that sum to one."
   },
   {
     "question": "Which loss function is used for classification?",
-    "expected_chunk_keyword": "categorical cross entropy",
+    "ground_truth_keywords": [
+      "categorical cross entropy",
+      "cross entropy"
+    ],
     "expected_answer": "Categorical cross entropy is used as the loss function."
   },
   {
     "question": "Which evaluation metric is used in the model?",
-    "expected_chunk_keyword": "accuracy",
+    "ground_truth_keywords": [
+      "accuracy"
+    ],
     "expected_answer": "Accuracy is used as the evaluation metric."
   },
   {
     "question": "What parameter controls the number of training iterations?",
-    "expected_chunk_keyword": "epochs",
+    "ground_truth_keywords": [
+      "epochs",
+      "epoch"
+    ],
     "expected_answer": "The number of epochs determines how many times the model trains over the dataset."
   },
   {
     "question": "Which method is used to generate predictions?",
-    "expected_chunk_keyword": "predict method",
+    "ground_truth_keywords": [
+      "predict",
+      "predict method"
+    ],
     "expected_answer": "The predict method is used to generate predictions."
   },
   {
     "question": "What does the output of the predict method represent?",
-    "expected_chunk_keyword": "probability",
+    "ground_truth_keywords": [
+      "probability",
+      "probabilities"
+    ],
     "expected_answer": "The output represents the probability that a sample belongs to each class."
   },
   {
     "question": "What should the probabilities from the output layer sum to?",
-    "expected_chunk_keyword": "sum to 1",
+    "ground_truth_keywords": [
+      "sum to 1",
+      "probabilities"
+    ],
     "expected_answer": "The probabilities produced by the output layer should sum to one."
   },
   {
     "question": "What does a higher probability indicate?",
-    "expected_chunk_keyword": "more confident",
+    "ground_truth_keywords": [
+      "more confident",
+      "confidence"
+    ],
     "expected_answer": "A higher probability indicates the model is more confident in its prediction."
   },
   {
     "question": "Why is the model considered very confident for the first few cars?",
-    "expected_chunk_keyword": "0.99",
+    "ground_truth_keywords": [
+      "0.99",
+      "class 0",
+      "high confidence"
+    ],
     "expected_answer": "The model predicts class 0 with probabilities close to 0.99, indicating high confidence."
   },
   {
     "question": "Why is the model less confident for the last few cars?",
-    "expected_chunk_keyword": "probabilities for decision 0 and decision 1 are very close",
+    "ground_truth_keywords": [
+      "probabilities for decision 0 and decision 1 are very close",
+      "decision 0",
+      "decision 1"
+    ],
     "expected_answer": "The probabilities for class 0 and class 1 are very close, making the prediction less confident."
   }
 ]
