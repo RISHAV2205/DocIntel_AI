@@ -40,7 +40,6 @@ print("\n================ Retrieval Evaluation ================\n")
 # Evaluate Every Question
 # -----------------------------
 for idx, test in enumerate(test_cases, start=1):
-
     question = test["question"]
     ground_truth_keywords = test["ground_truth_keywords"]
 
