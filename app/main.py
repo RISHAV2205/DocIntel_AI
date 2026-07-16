@@ -1,7 +1,10 @@
-from fastapi import FastAPI,Response,status,HTTPException,Depends
+from fastapi import FastAPI
 from .router import post, user,auth,documents,query,chat,chat_message
 from fastapi.middleware.cors import CORSMiddleware
- 
+
+from app.core.logging import setup_logging
+
+setup_logging()
 app = FastAPI()
 
     

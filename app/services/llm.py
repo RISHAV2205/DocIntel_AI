@@ -14,8 +14,6 @@ headers = {
     "Content-Type": "application/json"
 }
 
-
-
 def generate_answer(prompt):
     payload = {
         "model": "deepseek-ai/DeepSeek-V4-Flash",
@@ -75,7 +73,7 @@ def generate_answer_stream(prompt: str):
     # HuggingFace returns SSE lines like:
     # data: {"choices": [{"delta": {"content": "Hello"}}]}
     # data: [DONE]
-
+    # iter_lines() waits until a complete line arrives from the server, then yields it.
     for line in response.iter_lines():
         if not line:
             continue
