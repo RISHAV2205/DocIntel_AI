@@ -1,101 +1,26 @@
-// Import axios
 import axios from "axios";
 
-
-// ========================================
-// CREATE AXIOS INSTANCE
-// ========================================
-
-// This creates a reusable axios object
-// with backend base URL
-
 const API = axios.create({
-
-    baseURL: "http://127.0.0.1:8000"
-
+    baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
 });
 
-
-// ========================================
-// REQUEST INTERCEPTOR
-// ========================================
-
-// This automatically adds JWT token
-// in every request header
-
-API.interceptors.request.use(
-
-    (req) => {
-
-        // Get token from localStorage
-
-        const token = localStorage.getItem("token");
-
-        console.log("TOKEN:", token);
-
-        // If token exists
-        // add Authorization header
-
-        if (token) {
-
-            req.headers.Authorization =
-                `Bearer ${token}`;
-        }
-
-        console.log(req.headers);
-
-        return req;
-    },
-
-    // Handle request errors
-
-    (error) => {
-
-        return Promise.reject(error);
+API.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
-
-
-// ========================================
-// RESPONSE INTERCEPTOR (OPTIONAL)
-// ========================================
-
-// This helps handling expired token,
-// unauthorized access, etc.
+    return config;
+});
 
 API.interceptors.response.use(
-
-    // Successful response
-
-    (response) => {
-
-        return response;
-    },
-
-    // Error response
-
+    (response) => response,
     (error) => {
-
-        // If token expired or invalid
-
         if (error.response?.status === 401) {
-
-            console.log("Unauthorized Access");
-
-            // Remove invalid token
-
             localStorage.removeItem("token");
-
-            // Redirect user to login page
-
-            window.location.href = "/";
+            window.location.assign("/login");
         }
-
         return Promise.reject(error);
-    }
+    },
 );
-
-
-// Export API instance
 
 export default API;

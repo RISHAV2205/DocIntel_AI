@@ -1,645 +1,218 @@
-// React hooks
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Axios API instance
 import API from "../services/api";
 
+function getErrorMessage(error, fallback) {
+    return error.response?.data?.detail || fallback;
+}
+
 function ChatPage() {
-
-    // =========================================
-    // STATE VARIABLES
-    // =========================================
-
-    // Store all chats of logged-in user
     const [chats, setChats] = useState([]);
-
-    // Store currently selected chat id
-    const [chatId, setChatId] = useState(null);
-
-    // Store all messages of active chat
-    const [messages, setMessages] = useState([]);
-
-    // Store current user input
-    const [message, setMessage] = useState("");
-
-    // Store selected file
-    const [file, setFile] = useState(null);
-
     const [documents, setDocuments] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [activeChatId, setActiveChatId] = useState(null);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    const [isSending, setIsSending] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const navigate = useNavigate();
 
-    // load docs
-    const loadDocuments = async () => {
-
-    try {
-
-        const response = await API.get(
-            "/documents/"
-        );
-
-        setDocuments(response.data);
-
-    } catch (error) {
-
-        console.log(error.response?.data);
-    }
-};
-
-
-    // =========================================
-    // LOAD ALL CHATS
-    // =========================================
-
-    // Calls:
-    // GET /chat/
-    //
-    // Loads all previous chats
-    // of current logged-in user
-    const loadChats = async () => {
-
+    async function loadDocuments() {
         try {
-
-            const response = await API.get("/chat/");
-
-            console.log(response.data);
-
-            // Save chats in state
-            setChats(response.data);
-
-        } catch (error) {
-
-            console.log(error.response?.data);
+            const response = await API.get("/documents/");
+            setDocuments(response.data);
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not load documents."));
         }
-    };
+    }
 
-
-    // =========================================
-    // LOAD ALL MESSAGES OF CHAT
-    // =========================================
-
-    // Calls:
-    // GET /chat/{chat_id}/messages
-    //
-    // Loads old conversation messages
-    const loadMessages = async (id) => {
-
+    async function openChat(chatId) {
+        setError("");
         try {
-
-            const response = await API.get(
-                `/chat/${id}/messages`
-            );
-
-            console.log(response.data);
-
-            // Save all chat messages
+            const response = await API.get(`/chat/${chatId}/messages`);
+            setActiveChatId(chatId);
             setMessages(response.data);
-
-            // Set active chat id
-            setChatId(id);
-
-        } catch (error) {
-
-            console.log(error.response?.data);
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not load messages."));
         }
-    };
-
-
-    // =========================================
-    // CREATE NEW CHAT
-    // =========================================
-
-    // Calls:
-    // POST /chat/create/
-    //
-    // Creates new chat session
-    const createChat = async () => {
-
-        try {
-
-            const response = await API.post(
-                "/chat/create/",
-                {
-                    title: "New Chat"
-                }
-            );
-
-            console.log(response.data);
-
-            // Newly created chat
-            const newChat = response.data;
-
-            // Add new chat in sidebar
-            setChats((prev) => [
-                newChat,
-                ...prev
-            ]);
-
-            // Set active chat
-            setChatId(
-                newChat.id || newChat.chat_id
-            );
-
-            // Clear previous messages
-            setMessages([]);
-
-            alert("Chat Created");
-
-        } catch (error) {
-
-            console.log(error.response?.data);
-
-            alert("Chat Creation Failed");
-        }
-    };
-    // =========================================
-// DELETE CHAT
-// =========================================
-
-const deleteChat = async (id) => {
-
-    const confirmDelete = window.confirm(
-        "Are you sure you want to delete this chat?"
-    );
-
-    if (!confirmDelete) {
-        return;
     }
 
-    try {
-
-        await API.delete(`/chat/${id}`);
-
-        // Remove deleted chat from sidebar
-
-        setChats((prev) =>
-            prev.filter(
-                (chat) =>
-                    (chat.id || chat.chat_id) !== id
-            )
-        );
-
-        // If current chat was deleted
-
-        if (chatId === id) {
-
-            setChatId(null);
-
+    async function createChat() {
+        setError("");
+        try {
+            const response = await API.post("/chat/create", { title: "New Chat" });
+            const chat = { id: response.data.chat_id, title: response.data.title };
+            setChats((currentChats) => [chat, ...currentChats]);
+            setActiveChatId(chat.id);
             setMessages([]);
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not create chat."));
         }
-
-        alert("Chat Deleted");
-
-    } catch (error) {
-
-        console.log(error.response?.data);
-
-        alert("Delete Failed");
     }
-};
 
-    // =========================================
-    // UPLOAD DOCUMENT
-    // =========================================
-
-    // Calls:
-    // POST /documents/upload
-    //
-    // Uploads document for RAG pipeline
-    const uploadDocument = async () => {
-
-        // Check file selected or not
-        if (!file) {
-
-            alert("Select a file first");
-
-            return;
-        }
-
-        // Create form data
-        const formData = new FormData();
-
-        formData.append("file", file);
+    async function deleteChat(chatId) {
+        if (!window.confirm("Delete this chat and all its messages?")) return;
 
         try {
-
-            const response = await API.post(
-                "/documents/upload",
-                formData,
-                {
-                    headers: {
-                        "Content-Type":
-                            "multipart/form-data"
-                    }
-                }
-            );
-
-            console.log(response.data);
-
-            alert("Document Uploaded");
-
-        } catch (error) {
-
-            console.log(error.response?.data);
-
-            alert("Upload Failed");
+            await API.delete(`/chat/${chatId}`);
+            setChats((currentChats) => currentChats.filter((chat) => chat.id !== chatId));
+            if (activeChatId === chatId) {
+                setActiveChatId(null);
+                setMessages([]);
+            }
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not delete chat."));
         }
-    };
+    }
 
+    async function uploadDocument(event) {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+        const file = formData.get("file");
 
-    // =========================================
-    // SEND MESSAGE TO AI
-    // =========================================
-
-    // Calls:
-    // POST /chat/{chat_id}/message
-    //
-    // Backend performs:
-    // - embedding generation
-    // - vector search
-    // - reranking
-    // - conversation memory
-    // - LLM generation
-    const sendMessage = async () => {
-
-        // Check chat selected
-        if (!chatId) {
-
-            alert("Create chat first");
-
+        if (!(file instanceof File) || file.size === 0) {
+            setError("Choose a PDF, TXT, or DOCX file first.");
             return;
         }
 
-        // Prevent empty messages
-        if (!message.trim()) {
-
-            return;
+        setError("");
+        setIsUploading(true);
+        try {
+            await API.post("/documents/upload", formData);
+            form.reset();
+            await loadDocuments();
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not upload document."));
+        } finally {
+            setIsUploading(false);
         }
+    }
+
+    async function deleteDocument(documentId) {
+        if (!window.confirm("Delete this document?")) return;
 
         try {
-
-            // Store current user message
-            const currentMessage = message;
-
-            // Create user message object
-            const userMessage = {
-
-                role: "user",
-
-                content: currentMessage
-            };
-
-            // Instantly show user message
-            setMessages((prev) => [
-                ...prev,
-                userMessage
-            ]);
-
-            // Clear input box
-            setMessage("");
-
-            // Send query to backend
-            const response = await API.post(
-                `/chat/${chatId}/message`,
-                {
-                    query: currentMessage
-                }
-            );
-
-            console.log(response.data);
-
-            // AI response object
-            const aiMessage = {
-
-                role: "assistant",
-
-                content: response.data.response
-            };
-
-            // Add AI response in chat
-            setMessages((prev) => [
-                ...prev,
-                aiMessage
-            ]);
-
-        } catch (error) {
-
-            console.log(error.response?.data);
-
-            alert("Message Failed");
+            await API.delete(`/documents/delete-docs/${documentId}`);
+            setDocuments((currentDocuments) => currentDocuments.filter((document) => document.id !== documentId));
+        } catch (requestError) {
+            setError(getErrorMessage(requestError, "Could not delete document."));
         }
-    };
+    }
 
+    async function sendMessage(event) {
+        event.preventDefault();
+        const query = message.trim();
+        if (!query || !activeChatId || isSending) return;
 
-    // =========================================
-    // LOAD CHATS ON PAGE LOAD
-    // =========================================
+        const temporaryId = `temporary-${Date.now()}`;
+        setError("");
+        setMessage("");
+        setIsSending(true);
+        setMessages((currentMessages) => [...currentMessages, { id: temporaryId, role: "user", content: query }]);
+
+        try {
+            const response = await API.post(`/chat/${activeChatId}/message`, { query });
+            setMessages((currentMessages) => [
+                ...currentMessages,
+                { id: `assistant-${Date.now()}`, role: "assistant", content: response.data.response },
+            ]);
+        } catch (requestError) {
+            setMessages((currentMessages) => currentMessages.filter((item) => item.id !== temporaryId));
+            setMessage(query);
+            setError(getErrorMessage(requestError, "Could not send message."));
+        } finally {
+            setIsSending(false);
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        navigate("/login");
+    }
 
     useEffect(() => {
+        let isCurrent = true;
 
-        loadChats();
-        loadDocuments();
+        async function loadInitialData() {
+            try {
+                const [chatsResponse, documentsResponse] = await Promise.all([
+                    API.get("/chat/"),
+                    API.get("/documents/"),
+                ]);
+                if (!isCurrent) return;
 
+                setChats(chatsResponse.data);
+                setDocuments(documentsResponse.data);
+            } catch (requestError) {
+                if (isCurrent) {
+                    setError(getErrorMessage(requestError, "Could not load your data."));
+                }
+            }
+        }
+
+        void loadInitialData();
+        return () => {
+            isCurrent = false;
+        };
     }, []);
-    // DELETE DOCS
-    const deleteDocument = async (id) => {
-
-    try {
-
-        await API.delete(
-            `/documents/delete-docs/${id}`
-        );
-
-        setDocuments((prev) =>
-            prev.filter(
-                (doc) => doc.id !== id
-            )
-        );
-
-        alert("Document Deleted");
-
-    } catch (error) {
-
-        console.log(error.response?.data);
-
-        alert("Delete Failed");
-    }
-};
-
-
-    // =========================================
-    // UI SECTION
-    // =========================================
 
     return (
-
-        <div
-            style={{
-                display: "flex",
-                height: "100vh"
-            }}
-        >
-
-            {/* =====================================
-                SIDEBAR SECTION
-            ===================================== */}
-
-            <div
-                style={{
-                    width: "25%",
-                    borderRight: "1px solid gray",
-                    padding: "10px",
-                    overflowY: "auto"
-                }}
-            >
-
-                <h2>Chats</h2>
-
-                {/* CREATE CHAT BUTTON */}
-
-                <button
-                    onClick={createChat}
-                    style={{
-                        width: "100%",
-                        padding: "10px"
-                    }}
-                >
-                    + New Chat
-                </button>
-
-                <hr />
-
-                {/* DISPLAY ALL CHATS */}
-
-{
-    chats.map((chat) => (
-
-        <div
-            key={chat.id || chat.chat_id}
-
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px",
-                borderBottom: "1px solid #ccc",
-                marginBottom: "5px"
-            }}
-        >
-
-            <span
-                style={{
-                    cursor: "pointer",
-                    flex: 1
-                }}
-
-                onClick={() =>
-                    loadMessages(
-                        chat.id || chat.chat_id
-                    )
-                }
-            >
-                {chat.title}
-            </span>
-
-            <button
-                onClick={() =>
-                    deleteChat(
-                        chat.id || chat.chat_id
-                    )
-                }
-            >
-                🗑
-            </button>
-
-        </div>
-    ))
-}
-
-<hr />
-
-<h3>Documents</h3>
-
-{
-    documents.map((doc) => (
-
-        <div
-            key={doc.id}
-
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "8px",
-                borderBottom: "1px solid #eee"
-            }}
-        >
-
-            <span>
-                {doc.filename}
-            </span>
-
-            <button
-                onClick={() =>
-                    deleteDocument(doc.id)
-                }
-            >
-                🗑
-            </button>
-
-        </div>
-    ))
-}
-
-            </div>
-
-
-            {/* =====================================
-                CHAT WINDOW SECTION
-            ===================================== */}
-
-            <div
-                style={{
-                    width: "75%",
-                    padding: "20px",
-                    display: "flex",
-                    flexDirection: "column"
-                }}
-            >
-
-                <h2>AI Document Chat</h2>
-
-
-                {/* =====================================
-                    MESSAGE DISPLAY AREA
-                ===================================== */}
-
-                <div
-                    style={{
-                        flex: 1,
-                        overflowY: "auto",
-                        border: "1px solid #ccc",
-                        padding: "10px",
-                        marginBottom: "15px"
-                    }}
-                >
-
-                    {/* DISPLAY ALL CHAT MESSAGES */}
-
-                    {
-                        messages.map((msg, index) => (
-
-                            <div
-                                key={index}
-
-                                style={{
-                                    marginBottom: "15px",
-                                    padding: "10px",
-                                    borderRadius: "5px",
-                                    backgroundColor:
-                                        msg.role === "user"
-                                            ? "#f1f1f1"
-                                            : "#dbeafe"
-                                }}
-                            >
-
-                                {/* Message role */}
-
-                                <b>
-                                    {
-                                        msg.role === "user"
-                                            ? "You"
-                                            : "AI"
-                                    }
-                                    :
-                                </b>
-
-                                {/* Message content */}
-
-                                <p>{msg.content}</p>
-
-                            </div>
-                        ))
-                    }
-
+        <main className="chat-layout">
+            <aside className="sidebar">
+                <div className="sidebar-heading">
+                    <h1>Document Chat</h1>
+                    <button className="secondary-button" onClick={logout}>Log out</button>
                 </div>
 
+                <button onClick={createChat}>+ New chat</button>
+                <section>
+                    <h2>Chats</h2>
+                    {chats.length === 0 && <p className="empty-state">No chats yet.</p>}
+                    {chats.map((chat) => (
+                        <div className="list-item" key={chat.id}>
+                            <button className={activeChatId === chat.id ? "chat-button active" : "chat-button"} onClick={() => openChat(chat.id)}>{chat.title}</button>
+                            <button className="delete-button" aria-label={`Delete ${chat.title}`} onClick={() => deleteChat(chat.id)}>Delete</button>
+                        </div>
+                    ))}
+                </section>
 
-                {/* =====================================
-                    DOCUMENT UPLOAD SECTION
-                ===================================== */}
+                <section>
+                    <h2>Documents</h2>
+                    <form className="upload-form" onSubmit={uploadDocument}>
+                        <input name="file" type="file" accept=".pdf,.txt,.docx" required />
+                        <button type="submit" disabled={isUploading}>{isUploading ? "Uploading..." : "Upload"}</button>
+                    </form>
+                    {documents.length === 0 && <p className="empty-state">No documents uploaded.</p>}
+                    {documents.map((document) => (
+                        <div className="list-item" key={document.id}>
+                            <span>{document.filename} <small>({document.status})</small></span>
+                            <button className="delete-button" onClick={() => deleteDocument(document.id)}>Delete</button>
+                        </div>
+                    ))}
+                </section>
+            </aside>
 
-                <div
-                    style={{
-                        marginBottom: "15px"
-                    }}
-                >
-
-                    <input
-                        type="file"
-
-                        onChange={(e) =>
-                            setFile(e.target.files[0])
-                        }
-                    />
-
-                    <button
-                        onClick={uploadDocument}
-
-                        style={{
-                            marginLeft: "10px"
-                        }}
-                    >
-                        Upload Document
-                    </button>
-
+            <section className="conversation">
+                <h2>{activeChatId ? "Chat" : "Create or select a chat"}</h2>
+                {error && <p className="error-message">{error}</p>}
+                <div className="messages">
+                    {activeChatId && messages.length === 0 && <p className="empty-state">Ask a question about your uploaded documents.</p>}
+                    {messages.map((item, index) => (
+                        <article className={`message ${item.role}`} key={item.id || index}>
+                            <strong>{item.role === "user" ? "You" : "Assistant"}</strong>
+                            <p>{item.content}</p>
+                        </article>
+                    ))}
                 </div>
-
-
-                {/* =====================================
-                    INPUT SECTION
-                ===================================== */}
-
-                <div>
-
-                    {/* USER INPUT BOX */}
-
-                    <textarea
-                        rows="3"
-
-                        style={{
-                            width: "100%",
-                            padding: "10px"
-                        }}
-
-                        placeholder="Ask something..."
-
-                        value={message}
-
-                        onChange={(e) =>
-                            setMessage(e.target.value)
-                        }
-                    />
-
-                    <br /><br />
-
-                    {/* SEND BUTTON */}
-
-                    <button
-                        onClick={sendMessage}
-
-                        style={{
-                            padding: "10px 20px"
-                        }}
-                    >
-                        Send
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+                <form className="message-form" onSubmit={sendMessage}>
+                    <textarea value={message} onChange={(event) => setMessage(event.target.value)} placeholder={activeChatId ? "Ask about your documents..." : "Create or select a chat first."} disabled={!activeChatId || isSending} />
+                    <button type="submit" disabled={!activeChatId || !message.trim() || isSending}>{isSending ? "Sending..." : "Send"}</button>
+                </form>
+            </section>
+        </main>
     );
 }
 
 export default ChatPage;
-
