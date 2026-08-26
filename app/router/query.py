@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
 from pydantic import BaseModel
 from app.oauth2 import get_current_user
-from app.services.embedding import generate_embedding
+from app.services.embedding import EmbeddingService
 from app.database import get_db
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -21,7 +21,8 @@ class QueryRequest(BaseModel):
 def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = Depends(get_current_user)):
     print(current_user)
     # Step 1: Convert query → embedding
-    query_embedding = generate_embedding(request.query)
+    embedding_service = EmbeddingService()
+    query_embedding = embedding_service.generate_embedding(request.query)
 
     # Step 2: Fetch stored chunks + embeddings
     rows = conn.execute(

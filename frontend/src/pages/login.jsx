@@ -35,7 +35,7 @@ function Login() {
     return (
         <main className="auth-page">
             <form className="auth-card" onSubmit={handleSubmit}>
-                <h1>Document Chat</h1>
+                <h1>DocIntel AI</h1>
                 <p>Log in to chat with your documents.</p>
                 {error && <p className="error-message">{error}</p>}
                 <label htmlFor="login-email">Email</label>

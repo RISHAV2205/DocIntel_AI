@@ -1,44 +1,48 @@
 import os
+
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-JINA_API_KEY = os.getenv("JINA_API_KEY")
-JINA_EMBEDDING_URL = "https://api.jina.ai/v1/embeddings"
-EMBEDDING_MODEL = "jina-embeddings-v2-base-en"
-EMBEDDING_DIM = 768
 
-headers = {
-    "Authorization": f"Bearer {JINA_API_KEY}",
-    "Content-Type": "application/json"
-}
+class EmbeddingService:
+    """Generates single and batch embeddings through the Jina API."""
 
+    EMBEDDING_URL = "https://api.jina.ai/v1/embeddings"
+    MODEL = "jina-embeddings-v2-base-en"
+    DIMENSION = 768
 
-def generate_embedding(text: str) -> list[float]:
-    """Single embedding — used at query time."""
-    payload = {
-        "input": [text],
-        "model": EMBEDDING_MODEL
-    }
-    response = requests.post(JINA_EMBEDDING_URL, headers=headers, json=payload)
+    def __init__(self, api_key: str | None = None):
+        self.api_key = api_key or os.getenv("JINA_API_KEY")
+        if not self.api_key:
+            raise ValueError("JINA_API_KEY is not configured.")
 
-    if response.status_code != 200:
-        raise Exception(f"Jina embedding error: {response.status_code} - {response.text}")
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
 
-    return response.json()["data"][0]["embedding"]
+    def generate_embedding(self, text: str) -> list[float]:
+        """Generate an embedding for one query or document string."""
+        return self.generate_embeddings_batch([text])[0]
 
+    def generate_embeddings_batch(self, texts: list[str]) -> list[list[float]]:
+        """Generate embeddings for a batch of document chunks."""
+        if not texts:
+            return []
 
-def generate_embeddings_batch(texts: list[str]) -> list[list[float]]:
-    """Batch embedding — used in Celery task for document chunks."""
-    payload = {
-        "input": texts,
-        "model": EMBEDDING_MODEL
-    }
-    response = requests.post(JINA_EMBEDDING_URL, headers=headers, json=payload)
+        response = requests.post(
+            self.EMBEDDING_URL,
+            headers=self.headers,
+            json={"input": texts, "model": self.MODEL},
+            timeout=30,
+        )
 
-    if response.status_code != 200:
-        raise Exception(f"Jina batch error: {response.status_code} - {response.text}")
+        if response.status_code != 200:
+            raise RuntimeError(
+                f"Jina embedding error: {response.status_code} - {response.text}"
+            )
 
-    data = sorted(response.json()["data"], key=lambda x: x["index"])
-    return [item["embedding"] for item in data]
+        data = sorted(response.json()["data"], key=lambda item: item["index"])
+        return [item["embedding"] for item in data]

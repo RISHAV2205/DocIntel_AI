@@ -3,7 +3,7 @@ from app.database import session_local
 from app import models
 from app.services.text_extractor import extract_text
 from app.services.document_processor import process_extracted_text
-from app.services.embedding import generate_embedding,generate_embeddings_batch
+from app.services.embedding import EmbeddingService
 from app.services.storage import download_file   # ✅ NEW
 import os
 import tempfile
@@ -53,11 +53,12 @@ def process_document_task(self, document_id: int):
         logger.info(f"Created {len(chunks)} chunks")
 
         # Step 4 — embed and store
+        embedding_service = EmbeddingService()
         batch_size = 32
         for batch_start in range(0, len(chunks), batch_size):
             batch = chunks[batch_start:batch_start + batch_size]
             logger.info(f"Generating embeddings for batch "f"{batch_start // batch_size + 1}")
-            embeddings = generate_embeddings_batch(batch)   # ✅ batch
+            embeddings = embedding_service.generate_embeddings_batch(batch)
             for i, (chunk_text, vector) in enumerate(zip(batch, embeddings)):
                 chunk = models.DocumentChunk(
                     document_id=document.id,

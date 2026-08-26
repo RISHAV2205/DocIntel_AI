@@ -2,15 +2,16 @@
 import sys
 sys.path.append(".")
 
-from app.services.embedding import generate_embedding, generate_embeddings_batch
+from app.services.embedding import EmbeddingService
 from app.services.cross_encoder import rerank
 
 print("Testing embedding...")
-emb = generate_embedding("what is machine learning")
+embedding_service = EmbeddingService()
+emb = embedding_service.generate_embedding("what is machine learning")
 print(f"Dimension: {len(emb)}")   # must be 768
 
 print("\nTesting batch embedding...")
-embs = generate_embeddings_batch(["hello world", "machine learning", "deep learning"])
+embs = embedding_service.generate_embeddings_batch(["hello world", "machine learning", "deep learning"])
 print(f"Batch: {len(embs)} embeddings, each {len(embs[0])} dim")
 
 print("\nTesting reranker...")

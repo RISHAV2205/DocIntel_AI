@@ -162,7 +162,7 @@ function ChatPage() {
         <main className="chat-layout">
             <aside className="sidebar">
                 <div className="sidebar-heading">
-                    <h1>Document Chat</h1>
+                    <h1>DocIntel AI</h1>
                     <button className="secondary-button" onClick={logout}>Log out</button>
                 </div>
 

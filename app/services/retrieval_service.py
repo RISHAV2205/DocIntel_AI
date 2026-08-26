@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from app.services.embedding import generate_embedding
+from app.services.embedding import EmbeddingService
 from rank_bm25 import BM25Okapi
 
 
@@ -49,7 +49,8 @@ def retrieve_chunks(
     # Then find top_k most similar chunks using cosine distance
     # <=> is pgvector cosine distance operator
     # Lower distance = more similar
-    query_embedding = generate_embedding(question)
+    embedding_service = EmbeddingService()
+    query_embedding = embedding_service.generate_embedding(question)
 
     vector_rows = db.execute(
         text("""

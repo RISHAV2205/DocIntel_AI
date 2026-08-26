@@ -22,7 +22,7 @@ def setup_logging():
     prod_format = (
         '{"time":"%(asctime)s",'
         '"level":"%(levelname)s",'
-        '"module":"%(name)s",'
+        '"module":"%(namse)s",'
         '"message":"%(message)s"}'
     )
 

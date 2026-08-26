@@ -3,9 +3,7 @@ def _is_relevant(chunk: str, ground_truth_keywords: list[str]) -> bool:
     Returns True if any ground truth keyword is present
     inside the retrieved chunk.
     """
-
     chunk = chunk.lower()
-
     return any(
         keyword.lower() in chunk
         for keyword in ground_truth_keywords
@@ -23,18 +21,15 @@ def recall_at_k(
 ):
     """
     Binary Recall@K
-
     Returns:
         1 if at least one relevant chunk is retrieved
         else 0
     """
 
     retrieved = retrieved_chunks[:k]
-
     for chunk in retrieved:
         if _is_relevant(chunk, ground_truth_keywords):
             return 1
-
     return 0
 
 
