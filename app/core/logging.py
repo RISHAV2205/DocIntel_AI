@@ -22,7 +22,7 @@ def setup_logging():
     prod_format = (
         '{"time":"%(asctime)s",'
         '"level":"%(levelname)s",'
-        '"module":"%(namse)s",'
+        '"module":"%(name)s",'
         '"message":"%(message)s"}'
     )
 
@@ -41,11 +41,15 @@ def setup_logging():
         ],
     )
 
-    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    logging.getLogger("uvicorn.access").setLevel(logging.INFO)
     logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.WARNING)
-
+    logging.getLogger("python_multipart").setLevel(logging.WARNING)
+    logging.getLogger("passlib").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("celery").setLevel(logging.WARNING)
+    logging.getLogger("redis").setLevel(logging.WARNING)
 
 def get_logger(name: str):
     return logging.getLogger(name)

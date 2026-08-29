@@ -9,6 +9,9 @@ from sqlalchemy import text
 import json
 from app.services.retrieval_service import retrieve_chunks
 from app.services.llm import generate_answer
+from app.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 router = APIRouter()
 
@@ -19,7 +22,7 @@ class QueryRequest(BaseModel):
 
 @router.post("/query")
 def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = Depends(get_current_user)):
-    print(current_user)
+    logger.info("Document query received: user_id=%s query_length=%s", current_user.id, len(request.query))
     # Step 1: Convert query → embedding
     embedding_service = EmbeddingService()
     query_embedding = embedding_service.generate_embedding(request.query)
@@ -38,10 +41,12 @@ def retrieve_chunks(request: QueryRequest,conn=Depends(get_db),current_user = De
 
     # Edge case: no data
     if len(rows) == 0:
+        logger.info("Document query has no indexed chunks: user_id=%s", current_user.id)
         return {"message": "No documents found"}
 
     top_chunks,top_scores=retrieve_chunks(rows,query_embedding)
     ans= generate_answer(request.query, top_chunks)
+    logger.info("Document query completed: user_id=%s retrieved_chunks=%s", current_user.id, len(top_chunks))
     
 
     # Step 5: Return result

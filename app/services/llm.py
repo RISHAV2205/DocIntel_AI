@@ -2,6 +2,7 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
+from app.core.logging import get_logger
 
 load_dotenv()
 
@@ -13,6 +14,8 @@ headers = {
     "Authorization": f"Bearer {HF_TOKEN}",
     "Content-Type": "application/json"
 }
+
+logger = get_logger(__name__)
 
 def generate_answer(prompt):
     payload = {
@@ -32,10 +35,10 @@ def generate_answer(prompt):
         json=payload
     )
 
-    print("STATUS:", response.status_code)
-    print("RAW RESPONSE:", response.text)
+    logger.info("LLM response received: status_code=%s", response.status_code)
 
     if response.status_code != 200:
+        logger.error("LLM request failed: status_code=%s", response.status_code)
         return "LLM Error"
 
     result = response.json()
@@ -67,8 +70,11 @@ def generate_answer_stream(prompt: str):
     )
 
     if response.status_code != 200:
+        logger.error("LLM streaming request failed: status_code=%s", response.status_code)
         yield "LLM Error"
         return
+
+    logger.info("LLM streaming response started: status_code=%s", response.status_code)
 
     # HuggingFace returns SSE lines like:
     # data: {"choices": [{"delta": {"content": "Hello"}}]}
@@ -101,4 +107,5 @@ def generate_answer_stream(prompt: str):
             if token:
                 yield token
         except (json.JSONDecodeError, KeyError):
+            logger.warning("Received an invalid LLM streaming event")
             continue

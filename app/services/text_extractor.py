@@ -1,6 +1,9 @@
 import os
 import fitz  # PyMuPDF
 from docx import Document
+from app.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 PROCESSED_TEXT_DIR = "app/processed/text"
 os.makedirs(PROCESSED_TEXT_DIR, exist_ok=True)
@@ -19,15 +22,22 @@ def extract_text(file_path: str):
         raise ValueError("Unsupported file format")
 
     if not text.strip():
+        logger.warning("No text extracted: extension=%s", extension)
         raise ValueError("No text extracted")
 
     filename = os.path.basename(file_path)
-    print("file_name",filename)
     text_filename = filename.rsplit(".", 1)[0] + ".txt"
     text_path = os.path.join(PROCESSED_TEXT_DIR, text_filename)
 
     with open(text_path, "w", encoding="utf-8") as f:
         f.write(text)
+
+    logger.info(
+        "Text extracted: filename=%s extension=%s character_count=%s",
+        filename,
+        extension,
+        len(text),
+    )
 
     return text_path
 
